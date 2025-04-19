@@ -15,3 +15,20 @@ redis==5.2.1
 requests==2.32.3
 SQLAlchemy[asyncio]==2.0.38
 user-agents==2.2.0
+
+# 测试
+pytest 
+pytest-html 
+pytest-xdist 
+pytest-rerunfailures 
+pytest-order 
+pytest-result-log 
+allure-pytest
+pytest_asyncio
+anyio
+pytest-asyncio
+pytest-tornasync
+pytest-trio
+pytest-twisted
+twisted
+asgi_lifespan
