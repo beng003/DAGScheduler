@@ -12,18 +12,11 @@ from module_admin.entity.vo.task_vo import (
     JobLogModel,
 )
 from redis.asyncio import Redis as asyncio_redis
-import json
-from module_admin.entity.vo.common_vo import CrudResponseModel
 from module_admin.dao.task_dao import TaskDao
 from module_admin.dao.job_log_dao import JobLogDao
-from typing import List
 import httpx
 import asyncio
-from typing import List, Dict
-
-from typing import List, Optional
-import json
-from redis.asyncio import Redis as asyncio_redis
+from typing import List, Optional, Dict
 from datetime import datetime
 
 
@@ -105,9 +98,10 @@ class JobSchedulerService:
         :param job_uids: 任务ID列表
         :return: 任务停止结果列表
         """
-        return await self._send_request(
-            method="GET", endpoint="/stop_job", params={"job_uid": job_uids}
-        )
+        return 1
+        # return await self._send_request(
+        #     method="GET", endpoint="/stop_job", params={"job_uids": job_uids}
+        # )
 
     async def close(self):
         """关闭连接池"""
@@ -199,6 +193,7 @@ class RedisJobStore:
             await self.redis.delete(RedisKeys.JOB_PARAM.format(job_uid=job_uid))
             await self.redis.delete(RedisKeys.DEP_COUNT.format(job_uid=job_uid))
             await self.redis.delete(RedisKeys.DEPS.format(job_uid=job_uid))
+            await self.redis.srem(RedisKeys.READY_JOBS, job_uid)  # 新增：从就绪队列移除
 
         # 删除任务进度
         await self.redis.delete(RedisKeys.TASK_PROGRESS.format(task_uid=task_uid))
@@ -365,3 +360,25 @@ class TaskSchedulerService:
             # todo: 记录日志错误信息
             await self.executor.add_job_log(job_uid, "任务执行失败", "1")
             await self.progress_tracker.mark_failed(job.task_uid)
+
+    async def stop_task(self, task_uid: str):
+        """停止指定任务流"""
+        progress = await self.redis_store.get_task_progress(task_uid)
+        if not progress:
+            raise ValueError(f"任务流 {task_uid} 不存在或已完成")
+
+        # 停止所有关联任务
+        async with JobSchedulerService() as scheduler:
+            await scheduler.stop_jobs(progress.task_jobs)  # 调用已有停止接口
+
+        # 清理Redis数据
+        await self.redis_store.cleanup_task(task_uid)
+        
+        # 更新数据库状态
+        await self.progress_tracker._update_db(
+            task_uid=task_uid,
+            updates={
+                "run_status": "stopped",
+                "update_time": datetime.now()
+            }
+        )

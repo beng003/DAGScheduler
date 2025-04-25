@@ -194,6 +194,34 @@ class TaskService:
             raise ServiceException(message="定时任务流不存在")
 
     @classmethod
+    async def stop_task_services(
+        cls, 
+        query_db: AsyncSession, 
+        query_redis: asyncio_redis,
+        task_uid: str,
+    ) -> CrudResponseModel:
+        """
+        停止任务流service
+        
+        :param query_db: 数据库会话
+        :param task_uid: 任务流UID
+        :param update_by: 操作人
+        :return: 操作结果
+        """
+        task_info = await cls.task_detail_services_by_uid(query_db, task_uid)
+        if not task_info:
+            raise ServiceException(message="任务流不存在")
+            
+        scheduler = TaskSchedulerService(query_redis, query_db)
+        try:
+            await scheduler.stop_task(task_uid)
+            await query_db.commit()
+            return CrudResponseModel(is_success=True, message="已终止任务流")
+        except Exception as e:
+            await query_db.rollback()
+            raise ServiceException(message=f"终止任务流失败: {str(e)}")
+
+    @classmethod
     async def delete_task_services(
         cls, query_db: AsyncSession, page_object: DeleteTaskModel
     ):

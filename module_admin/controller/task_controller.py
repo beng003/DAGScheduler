@@ -1,5 +1,5 @@
 from datetime import datetime
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Form, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from config.get_db import get_db
 from utils.log_util import logger
@@ -16,15 +16,17 @@ from utils.response_util import ResponseUtil
 
 
 # question: LoginService.get_current_user?
-taskController = APIRouter(prefix="/monitor")
+taskController = APIRouter(prefix="/scheduler")
 
 
 @taskController.get(
-    "/task/{task_uid}",
+    "/task/get",
     response_model=TaskModel,
 )
 async def query_detail_task(
-    request: Request, task_uid: str, query_db: AsyncSession = Depends(get_db)
+    request: Request,
+    task_uid: str = Query(..., description="任务唯一标识"),  # 作为查询参数
+    query_db: AsyncSession = Depends(get_db),
 ):
     task_detail_result = await TaskService.task_detail_services_by_uid(
         query_db, task_uid
@@ -35,7 +37,7 @@ async def query_detail_task(
 
 
 @taskController.get(
-    "/task_list",
+    "/task/list",
     response_model=PageResponseModel,
 )
 async def get_task_list(
@@ -58,7 +60,7 @@ async def get_task_list(
 
 
 @taskController.post(
-    "/add_task",
+    "/task/add",
     response_model=PageResponseModel,
 )
 async def add_task(
@@ -79,25 +81,25 @@ async def add_task(
 
 
 @taskController.post(
-    "/job_complated",
+    "/job_completed",
     response_model=PageResponseModel,
 )
-async def job_complated(
+async def job_completed(
     request: Request,
-    job_complated: JobExecuteResponseModel,
+    job_completed: JobExecuteResponseModel,
     query_db: AsyncSession = Depends(get_db),
 ):
     task_scheduler = TaskSchedulerService(request.app.state.redis, query_db)
-    await task_scheduler.handle_job_completion(job_complated.job_uid, job_complated.success)
+    await task_scheduler.handle_job_completion(
+        job_completed.job_uid, job_completed.success
+    )
     return ResponseUtil.success(msg="记录成功")
 
 
-@taskController.put(
-    "/task/start/{task_uid}",
-)
+@taskController.post("/task/start")
 async def execute_system_task(
     request: Request,
-    task_uid: str,
+    task_uid: str = Query(..., description="任务唯一标识"),  # 作为查询参数
     query_db: AsyncSession = Depends(get_db),
 ):
     execute_task = TaskModel(
@@ -112,3 +114,17 @@ async def execute_system_task(
     return ResponseUtil.success(
         msg=execute_task_result.message, data={"task_uid": execute_task.task_uid}
     )
+
+
+@taskController.post("/task/stop")
+async def stop_task(
+    request: Request,
+    task_uid: str = Query(..., description="任务唯一标识"),  # 作为查询参数
+    query_db: AsyncSession = Depends(get_db),
+):
+    await TaskService.stop_task_services(
+        query_db=query_db, query_redis=request.app.state.redis, task_uid=task_uid
+    )
+    logger.info("任务停止成功")
+
+    return ResponseUtil.success(msg="任务停止成功")

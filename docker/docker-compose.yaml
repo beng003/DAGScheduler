@@ -1,0 +1,66 @@
+services:
+  backend:
+    build:
+      context: ..  # 指定上下文为上级目录（项目根目录）
+      dockerfile: docker/Dockerfile
+    container_name: backend_beng003
+    ports:
+      - "9099:9099"
+    volumes:
+      - ../:/app # 宿主机路径:容器路径
+    networks:
+      - network_beng003
+    environment:
+      - DB_HOST=mysql_beng003
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=12341234
+      - REDIS_HOST=redis_beng003
+      - REDIS_PORT=6379
+    depends_on:
+      - mysql_beng003
+      - redis_beng003
+
+  mysql_beng003:
+    image: mysql:8.0
+    restart: always
+    container_name: mysql_beng003
+    networks:
+      - network_beng003
+    # ports:
+    #   - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12341234
+      - MYSQL_DATABASE=DAGScheduler
+      # - TZ=Asia/Shanghai
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # - ../sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-uroot", "-p12341234" ]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  redis_beng003:
+    image: redis:latest
+    container_name: redis_beng003
+    networks:
+      - network_beng003
+    # ports:
+    #   - "6380:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  mysql_data:
+
+
+networks:
+  network_beng003:
+    name: network_beng003 # 强制指定名称
+    driver: bridge
+    # external: true
