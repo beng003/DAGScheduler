@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+        "github.vscode-github-actions",
+        "streetsidesoftware.code-spell-checker",
+        "ms-python.black-formatter",
+        "esbenp.prettier-vscode",
+        "ms-python.vscode-pylance",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "gruntfuggly.todo-tree",
+        "stylelint.vscode-stylelint",
+        "charliermarsh.ruff"
+    ]
+}

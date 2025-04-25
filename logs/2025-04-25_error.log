@@ -1005,3 +1005,34 @@ sqlalchemy.exc.IntegrityError: (asyncmy.errors.IntegrityError) (1062, "Duplicate
 2025-04-25 12:37:39.999 | 9a4f03ab27e243489a996431e174a20b | INFO     | module_admin.controller.task_controller:query_detail_task:34 - 获取task_uid为job-alice-bob-041的信息成功
 2025-04-25 12:38:03.530 | af5ffba4e19444078bc7323c4ee0753d | INFO     | module_admin.controller.task_controller:query_detail_task:34 - 获取task_uid为job-alice-bob-041的信息成功
 2025-04-25 12:38:11.703 | 79caea2a07984a90848c7134817990f9 | ERROR    | exceptions.handle:service_exception_handler:34 - 终止任务流失败: 任务流 job-alice-bob-041 不存在或已完成
+2025-04-25 20:44:42.066 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-25 20:44:42.066 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-25 20:44:42.096 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-25 20:44:42.097 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-25 20:44:42.101 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-25 20:44:42.101 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-25 21:02:11.887 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-25 21:02:11.888 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-25 21:02:11.918 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-25 21:02:11.918 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-25 21:02:11.922 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-25 21:02:11.922 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-25 21:02:20.552 |  | INFO     | config.get_redis:close_redis_pool:52 - 关闭redis连接成功
+2025-04-25 21:36:47.295 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-25 21:36:47.296 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-25 21:36:47.322 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-25 21:36:47.323 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-25 21:36:47.327 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-25 21:36:47.327 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-25 13:37:07.241 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-25 13:37:07.242 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-25 13:37:07.274 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-25 13:37:07.274 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-25 13:37:07.279 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-25 13:37:07.279 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-25 13:41:19.279 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-25 13:41:19.279 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-25 13:41:19.309 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-25 13:41:19.309 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-25 13:41:19.314 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-25 13:41:19.315 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功

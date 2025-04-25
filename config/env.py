@@ -112,6 +112,9 @@ class GetConfig:
         if "uvicorn" in sys.argv[0]:
             # 使用uvicorn启动时，命令行参数需要按照uvicorn的文档进行配置，无法自定义参数
             pass
+        elif "pytest" in sys.argv[0] or any("pytest" in arg for arg in sys.argv):
+            # 使用pytest运行测试时，不解析命令行参数
+            pass
         else:
             # 使用argparse定义命令行参数
             parser = argparse.ArgumentParser(description="命令行参数")

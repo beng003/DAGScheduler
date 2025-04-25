@@ -6,4 +6,23 @@
     "python.testing.pytestEnabled": true,
     // "python.testing.pytestPath": "/disc/home/beng003/work/RuoYi-Vue3-FastAPI/ruoyi-fastapi-backend/.venv/bin/pytest",
     "python.envFile": "${workspaceFolder}/.env.dev",
+    "cSpell.words": [
+        "anyio",
+        "asgi",
+        "asyncio",
+        "asyncmy",
+        "dotenv",
+        "fastapi",
+        "loguru",
+        "mysqlroot",
+        "openpyxl",
+        "passlib",
+        "psutil",
+        "pydantic",
+        "pytest",
+        "rerunfailures",
+        "ruoyi",
+        "tornasync",
+        "xdist"
+    ],
 }
