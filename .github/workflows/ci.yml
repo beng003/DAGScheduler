@@ -32,7 +32,7 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Active virtual environment
+      - name: Create and active virtual environment
         run: uv venv && source .venv/bin/activate
 
       - name: Install dependencies
@@ -48,5 +48,5 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           file: ./coverage.xml
-          # token: ${{ secrets.CODECOV_TOKEN }}
-          # slug: wsgggws/news-summary
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: beng003/DAGScheduler
