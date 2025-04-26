@@ -18,6 +18,7 @@ user-agents==2.2.0
 
 # 测试
 pytest 
+pytest-cov
 pytest-html 
 pytest-xdist 
 pytest-rerunfailures 

@@ -2087,3 +2087,23 @@ sqlalchemy.exc.InvalidRequestError: No primary key value supplied for column(s) 
 2025-04-26 08:03:03.469 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
 2025-04-26 08:11:32.098 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
 2025-04-26 08:11:32.098 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-26 11:38:44.902 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-26 11:38:44.902 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-26 11:39:02.894 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-26 11:39:02.895 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-26 11:39:03.079 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-26 11:39:03.081 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-26 11:39:03.087 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-26 11:39:03.088 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-26 19:41:44.649 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-26 19:41:44.652 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-26 19:41:44.672 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-26 19:41:44.672 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-26 19:41:44.681 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-26 19:41:44.681 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-26 19:41:44.725 | 983f0703d0e143d796e7e2ac075b8b0d | INFO     | module_admin.controller.task_controller:get_task_list:56 - 获取成功
+2025-04-26 19:41:44.775 | 991a591976794e9a8ff77a932a72b57e | INFO     | module_admin.controller.task_controller:add_task:75 - 新增成功
+2025-04-26 19:41:44.912 | afb452dd8f9842fe812929985e2c7369 | INFO     | module_admin.controller.task_controller:execute_system_task:113 - 执行成功
+2025-04-26 19:41:44.982 | cd7b5986d3464ae3bcac3b76a51194bd | INFO     | module_admin.controller.task_controller:stop_task:130 - 任务停止成功
+2025-04-26 19:41:44.993 | f4111d7a29474664a7085ee39cf484e1 | INFO     | module_admin.controller.task_controller:query_detail_task:33 - 获取task_uid为test_uid的信息成功
+2025-04-26 19:41:45.003 |  | INFO     | config.get_redis:close_redis_pool:52 - 关闭redis连接成功

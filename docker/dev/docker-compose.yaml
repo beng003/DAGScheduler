@@ -2,7 +2,7 @@ services:
   backend:
     build:
       context: ../..  # 指定上下文为上级目录（项目根目录）
-      dockerfile: docker/dev/Dockerfile
+      dockerfile: docker/Dockerfile
     container_name: dev_backend_beng003
     ports:
       - "9099:9099"
@@ -37,20 +37,20 @@ services:
       - dev_mysql_data:/var/lib/mysql
       # - ../sql:/docker-entrypoint-initdb.d
     healthcheck:
-      dev: [ "CMD", "mysqladmin", "ping", "-uroot", "-p12341234" ]
+      test: [ "CMD", "mysqladmin", "ping", "-uroot", "-p12341234" ]
       interval: 5s
       timeout: 10s
       retries: 10
 
   dev_redis_beng003:
-    image: redis:ladev
+    image: redis:latest
     container_name: dev_redis_beng003
     networks:
       - dev_network_beng003
     # ports:
     #   - "6380:6379"
     healthcheck:
-      dev: [ "CMD", "redis-cli", "ping" ]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 5s
       timeout: 3s
       retries: 5
