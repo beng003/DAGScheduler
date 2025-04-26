@@ -2107,3 +2107,15 @@ sqlalchemy.exc.InvalidRequestError: No primary key value supplied for column(s) 
 2025-04-26 19:41:44.982 | cd7b5986d3464ae3bcac3b76a51194bd | INFO     | module_admin.controller.task_controller:stop_task:130 - 任务停止成功
 2025-04-26 19:41:44.993 | f4111d7a29474664a7085ee39cf484e1 | INFO     | module_admin.controller.task_controller:query_detail_task:33 - 获取task_uid为test_uid的信息成功
 2025-04-26 19:41:45.003 |  | INFO     | config.get_redis:close_redis_pool:52 - 关闭redis连接成功
+2025-04-26 20:38:14.445 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-26 20:38:14.446 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-26 20:38:14.467 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-26 20:38:14.467 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-26 20:38:14.472 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-26 20:38:14.473 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-26 20:38:14.515 | 52be39f1f208403097f69936c3e7ca0a | INFO     | module_admin.controller.task_controller:get_task_list:56 - 获取成功
+2025-04-26 20:38:14.560 | 4622d2fde895449090f83f1c85ee26ca | INFO     | module_admin.controller.task_controller:add_task:75 - 新增成功
+2025-04-26 20:38:14.735 | f8830cf95a3e40b38dc1b3f71e9ca010 | INFO     | module_admin.controller.task_controller:execute_system_task:113 - 执行成功
+2025-04-26 20:38:14.804 | fd02f2699e914876ab4ab8d2b1360f49 | INFO     | module_admin.controller.task_controller:stop_task:130 - 任务停止成功
+2025-04-26 20:38:14.810 | f5180ecba4eb49279150622c26659b13 | INFO     | module_admin.controller.task_controller:query_detail_task:33 - 获取task_uid为test_uid的信息成功
+2025-04-26 20:38:14.814 |  | INFO     | config.get_redis:close_redis_pool:52 - 关闭redis连接成功
