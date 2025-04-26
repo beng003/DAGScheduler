@@ -114,6 +114,7 @@ class GetConfig:
             pass
         elif "pytest" in sys.argv[0] or any("pytest" in arg for arg in sys.argv):
             # 使用pytest运行测试时，不解析命令行参数
+            # os.environ["APP_ENV"] = "test"
             pass
         else:
             # 使用argparse定义命令行参数

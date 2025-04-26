@@ -3,7 +3,6 @@ from fastapi import APIRouter, Depends, Request, Form, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from config.get_db import get_db
 from utils.log_util import logger
-import time
 from module_admin.service.task_service import TaskService
 from module_admin.service.job_service import TaskSchedulerService
 from module_admin.entity.vo.task_vo import (
@@ -76,7 +75,7 @@ async def add_task(
     logger.info(add_task_result.message)
 
     return ResponseUtil.success(
-        msg=add_task_result.message,
+        msg=add_task_result.message, dict_content=add_task_result.result
     )
 
 
@@ -93,7 +92,9 @@ async def job_completed(
     await task_scheduler.handle_job_completion(
         job_completed.job_uid, job_completed.success
     )
-    return ResponseUtil.success(msg="记录成功")
+    return ResponseUtil.success(
+        msg="记录成功", dict_content={"job_uid": job_completed.job_uid}
+    )
 
 
 @taskController.post("/task/start")
@@ -112,7 +113,8 @@ async def execute_system_task(
     logger.info(execute_task_result.message)
 
     return ResponseUtil.success(
-        msg=execute_task_result.message, data={"task_uid": execute_task.task_uid}
+        msg=execute_task_result.message,
+        dict_content={"task_uid": execute_task.task_uid},
     )
 
 
@@ -127,4 +129,4 @@ async def stop_task(
     )
     logger.info("任务停止成功")
 
-    return ResponseUtil.success(msg="任务停止成功")
+    return ResponseUtil.success(msg="任务停止成功", dict_content={"task_uid": task_uid})

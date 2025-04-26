@@ -5,12 +5,13 @@
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
     // "python.testing.pytestPath": "/disc/home/beng003/work/RuoYi-Vue3-FastAPI/ruoyi-fastapi-backend/.venv/bin/pytest",
-    "python.envFile": "${workspaceFolder}/.env.dev",
+    // "python.envFile": "${workspaceFolder}/.env.dev",
     "cSpell.words": [
         "anyio",
         "asgi",
         "asyncio",
         "asyncmy",
+        "autouse",
         "dotenv",
         "fastapi",
         "loguru",
@@ -22,6 +23,7 @@
         "pytest",
         "rerunfailures",
         "ruoyi",
+        "sessionmaker",
         "tornasync",
         "xdist"
     ],

@@ -14,6 +14,7 @@ from module_admin.entity.vo.task_vo import (
 from redis.asyncio import Redis as asyncio_redis
 from module_admin.service.job_service import TaskSchedulerService
 from utils.common_util import SnakeCaseUtil
+import uuid
 
 
 class TaskService:
@@ -59,7 +60,9 @@ class TaskService:
         return CommonConstant.UNIQUE
 
     @classmethod
-    async def add_task_services(cls, query_db: AsyncSession, query_redis: asyncio_redis, page_object: TaskModel):
+    async def add_task_services(
+        cls, query_db: AsyncSession, query_redis: asyncio_redis, page_object: TaskModel
+    ):
         """
         新增定时任务流信息service
 
@@ -67,25 +70,33 @@ class TaskService:
         :param page_object: 新增定时任务流对象
         :return: 新增定时任务流校验结果
         """
+        if not page_object.task_uid:
+            page_object.task_uid = str(uuid.uuid4())
+
         if not await cls.check_task_unique_services(query_db, page_object):
             raise ServiceException(
                 message=f"新增定时任务流{page_object.task_name}失败，定时任务流已存在"
             )
         else:
             try:
+
                 add_task = await TaskDao.add_task_dao(query_db, page_object)
-                task_info = await cls.task_detail_services_by_uid(query_db, add_task.task_uid)
-                
+                task_info = await cls.task_detail_services_by_uid(
+                    query_db, add_task.task_uid
+                )
+
                 # todo: 添加任务执行代码
-                # if task_info.status == '0':
-                #     await JobUtil.add_job_to_redis(query_redis, page_object)
-                #     await JobUtil.execute_ready_job(query_redis)
-                task_scheduler = TaskSchedulerService(query_redis, query_db)
-                await task_scheduler.add_task(task_info)
-                await task_scheduler.executor.execute_all_ready_jobs()
-                    
+                if task_info.status == '0':
+                    task_scheduler = TaskSchedulerService(query_redis, query_db)
+                    await task_scheduler.add_task(task_info)
+                    await task_scheduler.executor.execute_all_ready_jobs()
+
                 await query_db.commit()
-                result = dict(is_success=True, message="新增成功")
+                result = dict(
+                    is_success=True,
+                    message="新增成功",
+                    result={"task_uid": task_info.task_uid},
+                )
             except Exception as e:
                 await query_db.rollback()
                 raise e
@@ -180,14 +191,16 @@ class TaskService:
         """
         # for job in page_object.task_yaml:
         #     SchedulerUtil.remove_scheduler_job(job_uid=job.job_uid)
-        task_info = await cls.task_detail_services_by_uid(query_db, page_object.task_uid)
+        task_info = await cls.task_detail_services_by_uid(
+            query_db, page_object.task_uid
+        )
         task_info.update_time = page_object.update_time
         task_info.update_by = page_object.update_by
         if task_info:
             task_scheduler = TaskSchedulerService(query_redis, query_db)
             await task_scheduler.add_task(task_info)
             await task_scheduler.executor.execute_all_ready_jobs()
-            
+
             await query_db.commit()
             return CrudResponseModel(is_success=True, message="执行成功")
         else:
@@ -195,14 +208,14 @@ class TaskService:
 
     @classmethod
     async def stop_task_services(
-        cls, 
-        query_db: AsyncSession, 
+        cls,
+        query_db: AsyncSession,
         query_redis: asyncio_redis,
         task_uid: str,
     ) -> CrudResponseModel:
         """
         停止任务流service
-        
+
         :param query_db: 数据库会话
         :param task_uid: 任务流UID
         :param update_by: 操作人
@@ -211,7 +224,7 @@ class TaskService:
         task_info = await cls.task_detail_services_by_uid(query_db, task_uid)
         if not task_info:
             raise ServiceException(message="任务流不存在")
-            
+
         scheduler = TaskSchedulerService(query_redis, query_db)
         try:
             await scheduler.stop_task(task_uid)
@@ -257,7 +270,7 @@ class TaskService:
         :return: 定时任务流id对应的信息
         """
         task = await TaskDao.get_task_detail_by_uid(query_db, task_uid=task_uid)
-        
+
         if task:
             result = TaskModel(**SnakeCaseUtil.transform_result(task))
         else:
