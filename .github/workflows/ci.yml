@@ -49,4 +49,4 @@ jobs:
         with:
           file: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
-          # slug: beng003/DAGScheduler
+          slug: beng003/DAGScheduler
