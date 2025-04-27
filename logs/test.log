@@ -1,18 +1,18 @@
-2025-04-26 20:38:14 [WARNING] plugin.py:122 - Start: tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_list
-2025-04-26 20:38:14 [INFO] base.py:1896 - SELECT DATABASE()
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - SELECT @@sql_mode
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - SELECT @@lower_case_table_names
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1097 - BEGIN (implicit)
-2025-04-26 20:38:14 [INFO] base.py:1896 - DESCRIBE `test_DAGScheduler_beng003`.`sys_task`
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - DESCRIBE `test_DAGScheduler_beng003`.`sys_job_log`
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - DESCRIBE `test_DAGScheduler_beng003`.`sys_task_log`
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - 
+2025-04-27 12:49:52 [WARNING] plugin.py:122 - Start: tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_list
+2025-04-27 12:49:52 [INFO] base.py:1896 - SELECT DATABASE()
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - SELECT @@sql_mode
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - SELECT @@lower_case_table_names
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1097 - BEGIN (implicit)
+2025-04-27 12:49:52 [INFO] base.py:1896 - DESCRIBE `DAGScheduler`.`sys_task`
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - DESCRIBE `DAGScheduler`.`sys_job_log`
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - DESCRIBE `DAGScheduler`.`sys_task_log`
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - 
 CREATE TABLE sys_task (
 	task_uid VARCHAR(64) NOT NULL COMMENT '任务流UID，唯一标识', 
 	task_name VARCHAR(64) COMMENT '任务流名称', 
@@ -36,11 +36,11 @@ CREATE TABLE sys_task (
 )COMMENT='定时任务流调度表'
 
 
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00021s] ()
-2025-04-26 20:38:14 [WARNING] asyncmy.py:107 - Specifying number of digits for floating point data types is deprecated and will be removed in a future release.
-2025-04-26 20:38:14 [INFO] base.py:1896 - CREATE INDEX idx_task_uid ON sys_task (task_uid)
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00015s] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00049s] ()
+2025-04-27 12:49:52 [WARNING] asyncmy.py:107 - Specifying number of digits for floating point data types is deprecated and will be removed in a future release.
+2025-04-27 12:49:52 [INFO] base.py:1896 - CREATE INDEX idx_task_uid ON sys_task (task_uid)
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00035s] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - 
 CREATE TABLE sys_job_log (
 	job_log_id BIGINT NOT NULL COMMENT '任务日志ID' AUTO_INCREMENT, 
 	job_uid VARCHAR(64) NOT NULL COMMENT '任务UID', 
@@ -60,14 +60,14 @@ CREATE TABLE sys_job_log (
 )COMMENT='定时任务调度日志表'
 
 
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00021s] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - CREATE INDEX idx_status ON sys_job_log (status)
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00026s] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - CREATE INDEX idx_time ON sys_job_log (create_time)
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00031s] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - CREATE INDEX idx_job_uid ON sys_job_log (job_uid)
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00043s] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00054s] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - CREATE INDEX idx_status ON sys_job_log (status)
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00054s] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - CREATE INDEX idx_time ON sys_job_log (create_time)
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00065s] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - CREATE INDEX idx_job_uid ON sys_job_log (job_uid)
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00072s] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - 
 CREATE TABLE sys_task_log (
 	task_log_id BIGINT NOT NULL COMMENT '任务流日志ID' AUTO_INCREMENT, 
 	task_uid VARCHAR(64) NOT NULL COMMENT '任务流UID', 
@@ -82,106 +82,106 @@ CREATE TABLE sys_task_log (
 )COMMENT='定时任务流调度日志表'
 
 
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00034s] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - CREATE INDEX idx_task_uid ON sys_task_log (task_uid)
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00067s] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - CREATE INDEX idx_time ON sys_task_log (create_time)
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00027s] ()
-2025-04-26 20:38:14 [INFO] base.py:1140 - COMMIT
-2025-04-26 20:38:14 [INFO] base.py:1097 - BEGIN (implicit)
-2025-04-26 20:38:14 [INFO] base.py:1896 - DESCRIBE `test_DAGScheduler_beng003`.`sys_task`
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - DESCRIBE `test_DAGScheduler_beng003`.`sys_job_log`
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - DESCRIBE `test_DAGScheduler_beng003`.`sys_task_log`
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1140 - COMMIT
-2025-04-26 20:38:14 [INFO] base.py:1097 - BEGIN (implicit)
-2025-04-26 20:38:14 [INFO] base.py:1896 - SELECT count(%s) AS count_1 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00085s] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - CREATE INDEX idx_task_uid ON sys_task_log (task_uid)
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00087s] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - CREATE INDEX idx_time ON sys_task_log (create_time)
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00086s] ()
+2025-04-27 12:49:52 [INFO] base.py:1140 - COMMIT
+2025-04-27 12:49:52 [INFO] base.py:1097 - BEGIN (implicit)
+2025-04-27 12:49:52 [INFO] base.py:1896 - DESCRIBE `DAGScheduler`.`sys_task`
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - DESCRIBE `DAGScheduler`.`sys_job_log`
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - DESCRIBE `DAGScheduler`.`sys_task_log`
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1140 - COMMIT
+2025-04-27 12:49:52 [INFO] base.py:1097 - BEGIN (implicit)
+2025-04-27 12:49:52 [INFO] base.py:1896 - SELECT count(%s) AS count_1 
 FROM (SELECT DISTINCT sys_task.task_uid AS task_uid, sys_task.task_name AS task_name, sys_task.task_initiator AS task_initiator, sys_task.task_group AS task_group, sys_task.task_yaml AS task_yaml, sys_task.concurrent AS concurrent, sys_task.cron_expression AS cron_expression, sys_task.misfire_policy AS misfire_policy, sys_task.status AS status, sys_task.run_status AS run_status, sys_task.task_progress AS task_progress, sys_task.priority AS priority, sys_task.create_by AS create_by, sys_task.create_time AS create_time, sys_task.update_by AS update_by, sys_task.update_time AS update_time, sys_task.remark AS remark 
 FROM sys_task 
 WHERE sys_task.task_group = %s AND sys_task.status = %s ORDER BY sys_task.task_uid) AS anon_1
-2025-04-26 20:38:14 [INFO] base.py:1901 - [generated in 0.00078s] ('*', 'default', '1')
-2025-04-26 20:38:14 [INFO] base.py:1896 - SELECT DISTINCT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [generated in 0.00122s] ('*', 'default', '1')
+2025-04-27 12:49:52 [INFO] base.py:1896 - SELECT DISTINCT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
 FROM sys_task 
 WHERE sys_task.task_group = %s AND sys_task.status = %s ORDER BY sys_task.task_uid 
  LIMIT %s, %s
-2025-04-26 20:38:14 [INFO] base.py:1901 - [generated in 0.00066s] ('default', '1', 0, 20)
-2025-04-26 20:38:14 [INFO] base.py:1123 - ROLLBACK
-2025-04-26 20:38:14 [INFO] _client.py:1740 - HTTP Request: GET http://localhost:9099/scheduler/task/list?page_num=1&page_size=20 "HTTP/1.1 200 OK"
-2025-04-26 20:38:14 [INFO] plugin.py:190 - test status is PASSED (tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_list): 
-2025-04-26 20:38:14 [WARNING] plugin.py:128 - End: tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_list
-2025-04-26 20:38:14 [WARNING] plugin.py:122 - Start: tests/test_module_admin/test_controller/test_task_controller.py::test_add_task
-2025-04-26 20:38:14 [INFO] base.py:1097 - BEGIN (implicit)
-2025-04-26 20:38:14 [INFO] base.py:1896 - SELECT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [generated in 0.00096s] ('default', '1', 0, 20)
+2025-04-27 12:49:52 [INFO] base.py:1123 - ROLLBACK
+2025-04-27 12:49:52 [INFO] _client.py:1740 - HTTP Request: GET http://localhost:9099/scheduler/task/list?page_num=1&page_size=20 "HTTP/1.1 200 OK"
+2025-04-27 12:49:52 [INFO] plugin.py:190 - test status is PASSED (tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_list): 
+2025-04-27 12:49:52 [WARNING] plugin.py:128 - End: tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_list
+2025-04-27 12:49:52 [WARNING] plugin.py:122 - Start: tests/test_module_admin/test_controller/test_task_controller.py::test_add_task
+2025-04-27 12:49:52 [INFO] base.py:1097 - BEGIN (implicit)
+2025-04-27 12:49:52 [INFO] base.py:1896 - SELECT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
 FROM sys_task 
 WHERE sys_task.task_name = %s AND sys_task.task_uid = %s
-2025-04-26 20:38:14 [INFO] base.py:1901 - [generated in 0.00053s] ('task2', 'test_uid')
-2025-04-26 20:38:14 [INFO] base.py:1896 - INSERT INTO sys_task (task_uid, task_name, task_initiator, task_group, task_yaml, concurrent, cron_expression, misfire_policy, status, run_status, task_progress, priority, create_by, create_time, update_by, update_time, remark) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-2025-04-26 20:38:14 [INFO] base.py:1901 - [generated in 0.00069s] ('test_uid', 'task2', 'alice', 'default', '[{"job_uid": "psi3", "job_executor": "default", "invoke_target": "module_task.scheduler_test.job", "job_args": "", "job_kwargs": "", "job_name": "psi ... (162 characters truncated) ... r_test.job", "job_args": "", "job_kwargs": "", "job_name": "psi2", "job_parties": "[\\"party1\\",\\"party2\\"]", "job_dependencies": "[\\"psi3\\"]"}]', '1', '0/10 * * * * ?', '3', '1', 'not started', 0, '0', 'admin', datetime.datetime(2025, 4, 26, 20, 38, 14, 540511), '', datetime.datetime(2025, 4, 26, 20, 38, 14, 540548), 'test')
-2025-04-26 20:38:14 [INFO] base.py:1896 - SELECT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [generated in 0.00062s] ('task2', 'test_uid')
+2025-04-27 12:49:52 [INFO] base.py:1896 - INSERT INTO sys_task (task_uid, task_name, task_initiator, task_group, task_yaml, concurrent, cron_expression, misfire_policy, status, run_status, task_progress, priority, create_by, create_time, update_by, update_time, remark) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+2025-04-27 12:49:52 [INFO] base.py:1901 - [generated in 0.00087s] ('test_uid', 'task2', 'alice', 'default', '[{"job_uid": "psi3", "job_executor": "default", "invoke_target": "module_task.scheduler_test.job", "job_args": "", "job_kwargs": "", "job_name": "psi ... (162 characters truncated) ... r_test.job", "job_args": "", "job_kwargs": "", "job_name": "psi2", "job_parties": "[\\"party1\\",\\"party2\\"]", "job_dependencies": "[\\"psi3\\"]"}]', '1', '0/10 * * * * ?', '3', '1', 'not started', 0, '0', 'admin', datetime.datetime(2025, 4, 27, 12, 49, 52, 428727), '', datetime.datetime(2025, 4, 27, 12, 49, 52, 428784), 'test')
+2025-04-27 12:49:52 [INFO] base.py:1896 - SELECT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
 FROM sys_task 
 WHERE sys_task.task_uid = %s
-2025-04-26 20:38:14 [INFO] base.py:1901 - [generated in 0.00048s] ('test_uid',)
-2025-04-26 20:38:14 [INFO] base.py:1140 - COMMIT
-2025-04-26 20:38:14 [INFO] _client.py:1740 - HTTP Request: POST http://localhost:9099/scheduler/task/add "HTTP/1.1 200 OK"
-2025-04-26 20:38:14 [INFO] plugin.py:190 - test status is PASSED (tests/test_module_admin/test_controller/test_task_controller.py::test_add_task): 
-2025-04-26 20:38:14 [WARNING] plugin.py:128 - End: tests/test_module_admin/test_controller/test_task_controller.py::test_add_task
-2025-04-26 20:38:14 [WARNING] plugin.py:122 - Start: tests/test_module_admin/test_controller/test_task_controller.py::test_execute_task
-2025-04-26 20:38:14 [INFO] base.py:1097 - BEGIN (implicit)
-2025-04-26 20:38:14 [INFO] base.py:1896 - SELECT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [generated in 0.00067s] ('test_uid',)
+2025-04-27 12:49:52 [INFO] base.py:1140 - COMMIT
+2025-04-27 12:49:52 [INFO] _client.py:1740 - HTTP Request: POST http://localhost:9099/scheduler/task/add "HTTP/1.1 200 OK"
+2025-04-27 12:49:52 [INFO] plugin.py:190 - test status is PASSED (tests/test_module_admin/test_controller/test_task_controller.py::test_add_task): 
+2025-04-27 12:49:52 [WARNING] plugin.py:128 - End: tests/test_module_admin/test_controller/test_task_controller.py::test_add_task
+2025-04-27 12:49:52 [WARNING] plugin.py:122 - Start: tests/test_module_admin/test_controller/test_task_controller.py::test_execute_task
+2025-04-27 12:49:52 [INFO] base.py:1097 - BEGIN (implicit)
+2025-04-27 12:49:52 [INFO] base.py:1896 - SELECT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
 FROM sys_task 
 WHERE sys_task.task_uid = %s
-2025-04-26 20:38:14 [INFO] base.py:1901 - [cached since 0.01649s ago] ('test_uid',)
-2025-04-26 20:38:14 [INFO] base.py:1896 - UPDATE sys_task SET run_status=%s, task_progress=%s WHERE sys_task.task_uid = %s
-2025-04-26 20:38:14 [INFO] base.py:1901 - [generated in 0.00056s] ('running', 0, 'test_uid')
-2025-04-26 20:38:14 [INFO] base.py:1140 - COMMIT
-2025-04-26 20:38:14 [INFO] base.py:1097 - BEGIN (implicit)
-2025-04-26 20:38:14 [INFO] base.py:1896 - INSERT INTO sys_job_log (job_uid, task_uid, job_name, job_parties, job_dependencies, job_executor, invoke_target, job_args, job_kwargs, job_message, status, exception_info, create_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-2025-04-26 20:38:14 [INFO] base.py:1901 - [generated in 0.00079s] ('psi3', 'test_uid', 'psi1', '["party1","party2"]', '[]', 'default', 'module_task.scheduler_test.job', '', '', '任务开始执行', '0', '', datetime.datetime(2025, 4, 26, 20, 38, 14, 598306))
-2025-04-26 20:38:14 [INFO] base.py:1140 - COMMIT
-2025-04-26 20:38:14 [INFO] _client.py:1740 - HTTP Request: POST http://localhost:9099/scheduler/task/start?task_uid=test_uid "HTTP/1.1 200 OK"
-2025-04-26 20:38:14 [INFO] plugin.py:190 - test status is PASSED (tests/test_module_admin/test_controller/test_task_controller.py::test_execute_task): 
-2025-04-26 20:38:14 [WARNING] plugin.py:128 - End: tests/test_module_admin/test_controller/test_task_controller.py::test_execute_task
-2025-04-26 20:38:14 [WARNING] plugin.py:122 - Start: tests/test_module_admin/test_controller/test_task_controller.py::test_stop_task
-2025-04-26 20:38:14 [INFO] base.py:1097 - BEGIN (implicit)
-2025-04-26 20:38:14 [INFO] base.py:1896 - SELECT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [cached since 0.0233s ago] ('test_uid',)
+2025-04-27 12:49:52 [INFO] base.py:1896 - UPDATE sys_task SET run_status=%s, task_progress=%s WHERE sys_task.task_uid = %s
+2025-04-27 12:49:52 [INFO] base.py:1901 - [generated in 0.00071s] ('running', 0, 'test_uid')
+2025-04-27 12:49:52 [INFO] base.py:1140 - COMMIT
+2025-04-27 12:49:52 [INFO] base.py:1097 - BEGIN (implicit)
+2025-04-27 12:49:52 [INFO] base.py:1896 - INSERT INTO sys_job_log (job_uid, task_uid, job_name, job_parties, job_dependencies, job_executor, invoke_target, job_args, job_kwargs, job_message, status, exception_info, create_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+2025-04-27 12:49:52 [INFO] base.py:1901 - [generated in 0.00092s] ('psi3', 'test_uid', 'psi1', '["party1","party2"]', '[]', 'default', 'module_task.scheduler_test.job', '', '', '任务开始执行', '0', '', datetime.datetime(2025, 4, 27, 12, 49, 52, 507757))
+2025-04-27 12:49:52 [INFO] base.py:1140 - COMMIT
+2025-04-27 12:49:52 [INFO] _client.py:1740 - HTTP Request: POST http://localhost:9099/scheduler/task/start?task_uid=test_uid "HTTP/1.1 200 OK"
+2025-04-27 12:49:52 [INFO] plugin.py:190 - test status is PASSED (tests/test_module_admin/test_controller/test_task_controller.py::test_execute_task): 
+2025-04-27 12:49:52 [WARNING] plugin.py:128 - End: tests/test_module_admin/test_controller/test_task_controller.py::test_execute_task
+2025-04-27 12:49:52 [WARNING] plugin.py:122 - Start: tests/test_module_admin/test_controller/test_task_controller.py::test_stop_task
+2025-04-27 12:49:52 [INFO] base.py:1097 - BEGIN (implicit)
+2025-04-27 12:49:52 [INFO] base.py:1896 - SELECT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
 FROM sys_task 
 WHERE sys_task.task_uid = %s
-2025-04-26 20:38:14 [INFO] base.py:1901 - [cached since 0.1877s ago] ('test_uid',)
-2025-04-26 20:38:14 [INFO] base.py:1896 - UPDATE sys_task SET run_status=%s, update_time=%s WHERE sys_task.task_uid = %s
-2025-04-26 20:38:14 [INFO] base.py:1901 - [generated in 0.00026s] ('stopped', datetime.datetime(2025, 4, 26, 20, 38, 14, 798580), 'test_uid')
-2025-04-26 20:38:14 [INFO] base.py:1140 - COMMIT
-2025-04-26 20:38:14 [INFO] _client.py:1740 - HTTP Request: POST http://localhost:9099/scheduler/task/stop?task_uid=test_uid "HTTP/1.1 200 OK"
-2025-04-26 20:38:14 [INFO] plugin.py:190 - test status is PASSED (tests/test_module_admin/test_controller/test_task_controller.py::test_stop_task): 
-2025-04-26 20:38:14 [WARNING] plugin.py:128 - End: tests/test_module_admin/test_controller/test_task_controller.py::test_stop_task
-2025-04-26 20:38:14 [WARNING] plugin.py:122 - Start: tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_detail
-2025-04-26 20:38:14 [INFO] base.py:1097 - BEGIN (implicit)
-2025-04-26 20:38:14 [INFO] base.py:1896 - SELECT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [cached since 0.1577s ago] ('test_uid',)
+2025-04-27 12:49:52 [INFO] base.py:1896 - UPDATE sys_task SET run_status=%s, update_time=%s WHERE sys_task.task_uid = %s
+2025-04-27 12:49:52 [INFO] base.py:1901 - [generated in 0.00057s] ('stopped', datetime.datetime(2025, 4, 27, 12, 49, 52, 645848), 'test_uid')
+2025-04-27 12:49:52 [INFO] base.py:1140 - COMMIT
+2025-04-27 12:49:52 [INFO] _client.py:1740 - HTTP Request: POST http://localhost:9099/scheduler/task/stop?task_uid=test_uid "HTTP/1.1 200 OK"
+2025-04-27 12:49:52 [INFO] plugin.py:190 - test status is PASSED (tests/test_module_admin/test_controller/test_task_controller.py::test_stop_task): 
+2025-04-27 12:49:52 [WARNING] plugin.py:128 - End: tests/test_module_admin/test_controller/test_task_controller.py::test_stop_task
+2025-04-27 12:49:52 [WARNING] plugin.py:122 - Start: tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_detail
+2025-04-27 12:49:52 [INFO] base.py:1097 - BEGIN (implicit)
+2025-04-27 12:49:52 [INFO] base.py:1896 - SELECT sys_task.task_uid, sys_task.task_name, sys_task.task_initiator, sys_task.task_group, sys_task.task_yaml, sys_task.concurrent, sys_task.cron_expression, sys_task.misfire_policy, sys_task.status, sys_task.run_status, sys_task.task_progress, sys_task.priority, sys_task.create_by, sys_task.create_time, sys_task.update_by, sys_task.update_time, sys_task.remark 
 FROM sys_task 
 WHERE sys_task.task_uid = %s
-2025-04-26 20:38:14 [INFO] base.py:1901 - [cached since 0.2558s ago] ('test_uid',)
-2025-04-26 20:38:14 [INFO] base.py:1123 - ROLLBACK
-2025-04-26 20:38:14 [INFO] _client.py:1740 - HTTP Request: GET http://localhost:9099/scheduler/task/get?task_uid=test_uid "HTTP/1.1 200 OK"
-2025-04-26 20:38:14 [INFO] plugin.py:190 - test status is PASSED (tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_detail): 
-2025-04-26 20:38:14 [WARNING] plugin.py:128 - End: tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_detail
-2025-04-26 20:38:14 [WARNING] plugin.py:122 - Start: tests/test_utils/test_common_util.py::TestSnakeCaseUtil::test_camel_to_snake
-2025-04-26 20:38:14 [INFO] plugin.py:190 - test status is PASSED (tests/test_utils/test_common_util.py::TestSnakeCaseUtil::test_camel_to_snake): 
-2025-04-26 20:38:14 [WARNING] plugin.py:128 - End: tests/test_utils/test_common_util.py::TestSnakeCaseUtil::test_camel_to_snake
-2025-04-26 20:38:14 [INFO] base.py:1097 - BEGIN (implicit)
-2025-04-26 20:38:14 [INFO] base.py:1896 - DESCRIBE `test_DAGScheduler_beng003`.`sys_task`
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - DESCRIBE `test_DAGScheduler_beng003`.`sys_job_log`
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - DESCRIBE `test_DAGScheduler_beng003`.`sys_task_log`
-2025-04-26 20:38:14 [INFO] base.py:1901 - [raw sql] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [cached since 0.2225s ago] ('test_uid',)
+2025-04-27 12:49:52 [INFO] base.py:1123 - ROLLBACK
+2025-04-27 12:49:52 [INFO] _client.py:1740 - HTTP Request: GET http://localhost:9099/scheduler/task/get?task_uid=test_uid "HTTP/1.1 200 OK"
+2025-04-27 12:49:52 [INFO] plugin.py:190 - test status is PASSED (tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_detail): 
+2025-04-27 12:49:52 [WARNING] plugin.py:128 - End: tests/test_module_admin/test_controller/test_task_controller.py::test_get_task_detail
+2025-04-27 12:49:52 [WARNING] plugin.py:122 - Start: tests/test_utils/test_common_util.py::TestSnakeCaseUtil::test_camel_to_snake
+2025-04-27 12:49:52 [INFO] plugin.py:190 - test status is PASSED (tests/test_utils/test_common_util.py::TestSnakeCaseUtil::test_camel_to_snake): 
+2025-04-27 12:49:52 [WARNING] plugin.py:128 - End: tests/test_utils/test_common_util.py::TestSnakeCaseUtil::test_camel_to_snake
+2025-04-27 12:49:52 [INFO] base.py:1097 - BEGIN (implicit)
+2025-04-27 12:49:52 [INFO] base.py:1896 - DESCRIBE `DAGScheduler`.`sys_task`
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - DESCRIBE `DAGScheduler`.`sys_job_log`
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - DESCRIBE `DAGScheduler`.`sys_task_log`
+2025-04-27 12:49:52 [INFO] base.py:1901 - [raw sql] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - 
 DROP TABLE sys_task_log
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00013s] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00027s] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - 
 DROP TABLE sys_job_log
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00019s] ()
-2025-04-26 20:38:14 [INFO] base.py:1896 - 
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00046s] ()
+2025-04-27 12:49:52 [INFO] base.py:1896 - 
 DROP TABLE sys_task
-2025-04-26 20:38:14 [INFO] base.py:1901 - [no key 0.00020s] ()
-2025-04-26 20:38:14 [INFO] base.py:1140 - COMMIT
+2025-04-27 12:49:52 [INFO] base.py:1901 - [no key 0.00088s] ()
+2025-04-27 12:49:52 [INFO] base.py:1140 - COMMIT

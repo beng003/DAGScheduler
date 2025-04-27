@@ -1,0 +1,84 @@
+2025-04-27 12:39:55.551 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-27 12:39:55.552 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-27 12:39:55.581 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-27 12:39:55.582 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-27 12:39:55.591 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-27 12:39:55.591 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-27 12:39:55.646 | 0e768ae00c5940629d4a11c9ea5ea7c2 | INFO     | module_admin.controller.task_controller:get_task_list:56 - 获取成功
+2025-04-27 12:39:55.704 | a5f0b0334b5344c3bd9be31a60832375 | INFO     | module_admin.controller.task_controller:add_task:75 - 新增成功
+2025-04-27 12:39:55.841 | bd83801532eb4227a853c0b66e7ff166 | INFO     | module_admin.controller.task_controller:execute_system_task:113 - 执行成功
+2025-04-27 12:39:55.904 | a8ffa3259804417b9b7df6e9cc32b490 | INFO     | module_admin.controller.task_controller:stop_task:130 - 任务停止成功
+2025-04-27 12:39:55.916 | 73e8078876464fb58635aeaf58ec1a06 | INFO     | module_admin.controller.task_controller:query_detail_task:33 - 获取task_uid为test_uid的信息成功
+2025-04-27 12:39:55.927 |  | INFO     | config.get_redis:close_redis_pool:52 - 关闭redis连接成功
+2025-04-27 12:40:12.699 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-27 12:40:12.700 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-27 12:40:12.727 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-27 12:40:12.728 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-27 12:40:12.735 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-27 12:40:12.736 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-27 12:40:12.790 | 0f00c0e24a834cc3b249fe93e2f54a94 | INFO     | module_admin.controller.task_controller:get_task_list:56 - 获取成功
+2025-04-27 12:40:12.845 | f2610fc4a18c4580be838b4cc4f9c8bc | INFO     | module_admin.controller.task_controller:add_task:75 - 新增成功
+2025-04-27 12:40:12.986 | a070c8661ddf42419f06cc1b9729849e | INFO     | module_admin.controller.task_controller:execute_system_task:113 - 执行成功
+2025-04-27 12:40:13.053 | f2532ff654cd4705ab04d526dbea35a4 | INFO     | module_admin.controller.task_controller:stop_task:130 - 任务停止成功
+2025-04-27 12:40:13.066 | 18a62d47e6d24fae9122ed7df61dbf23 | INFO     | module_admin.controller.task_controller:query_detail_task:33 - 获取task_uid为test_uid的信息成功
+2025-04-27 12:40:13.077 |  | INFO     | config.get_redis:close_redis_pool:52 - 关闭redis连接成功
+2025-04-27 12:41:08.076 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-27 12:41:08.077 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-27 12:41:08.107 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-27 12:41:08.108 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-27 12:41:08.115 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-27 12:41:08.116 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-27 12:41:08.165 | a6db4e960bb044398c3bb9f4f458908a | INFO     | module_admin.controller.task_controller:get_task_list:56 - 获取成功
+2025-04-27 12:41:08.225 | 9b573457ff7f436cb701867ca2e18df2 | INFO     | module_admin.controller.task_controller:add_task:75 - 新增成功
+2025-04-27 12:41:08.365 | e36b4d11560c4ad4a3b118263c6b6b7e | INFO     | module_admin.controller.task_controller:execute_system_task:113 - 执行成功
+2025-04-27 12:41:08.429 | 2d31dfe82a6844489e148188fd6606b1 | INFO     | module_admin.controller.task_controller:stop_task:130 - 任务停止成功
+2025-04-27 12:41:08.441 | a8f7c4a090474fe284eae041a5a22d5c | INFO     | module_admin.controller.task_controller:query_detail_task:33 - 获取task_uid为test_uid的信息成功
+2025-04-27 12:41:08.453 |  | INFO     | config.get_redis:close_redis_pool:52 - 关闭redis连接成功
+2025-04-27 12:41:22.242 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-27 12:41:22.243 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-27 12:41:22.273 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-27 12:41:22.274 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-27 12:41:22.282 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-27 12:41:22.283 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-27 12:41:22.334 | 721eff82c41a40f9a2a9b18214eb0602 | INFO     | module_admin.controller.task_controller:get_task_list:56 - 获取成功
+2025-04-27 12:41:22.393 | d222869419354c898cfa40907932c9db | INFO     | module_admin.controller.task_controller:add_task:75 - 新增成功
+2025-04-27 12:41:22.526 | 8d4a8d7f0acf4e8cb83bc64d7c17652f | INFO     | module_admin.controller.task_controller:execute_system_task:113 - 执行成功
+2025-04-27 12:41:22.589 | 7a672b2c803340efa97d22fef1f8b12b | INFO     | module_admin.controller.task_controller:stop_task:130 - 任务停止成功
+2025-04-27 12:41:22.602 | ef99509bfa0a414ab3cc260adc30ddc9 | INFO     | module_admin.controller.task_controller:query_detail_task:33 - 获取task_uid为test_uid的信息成功
+2025-04-27 12:41:22.614 |  | INFO     | config.get_redis:close_redis_pool:52 - 关闭redis连接成功
+2025-04-27 12:43:25.096 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-27 12:43:25.098 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-27 12:43:25.122 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-27 12:43:25.123 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-27 12:43:25.130 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-27 12:43:25.130 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-27 12:43:25.172 | 6aa3cda691204416b2f932162c2661c1 | INFO     | module_admin.controller.task_controller:get_task_list:56 - 获取成功
+2025-04-27 12:43:25.222 | cea3330423ca493dbe7ed04fcb81565a | INFO     | module_admin.controller.task_controller:add_task:75 - 新增成功
+2025-04-27 12:43:25.334 | a03d492ec4464c75a52d24927d1dd0eb | INFO     | module_admin.controller.task_controller:execute_system_task:113 - 执行成功
+2025-04-27 12:43:25.391 | d1d6b90ca71f4cbd94221059917803ae | INFO     | module_admin.controller.task_controller:stop_task:130 - 任务停止成功
+2025-04-27 12:43:25.402 | 119952054e604bdea2edf31c7fb506b1 | INFO     | module_admin.controller.task_controller:query_detail_task:33 - 获取task_uid为test_uid的信息成功
+2025-04-27 12:43:25.410 |  | INFO     | config.get_redis:close_redis_pool:52 - 关闭redis连接成功
+2025-04-27 12:47:03.001 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-27 12:47:03.002 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-27 12:47:03.031 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-27 12:47:03.031 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-27 12:47:03.040 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-27 12:47:03.041 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-27 12:47:03.089 | 48762f910f5e4ff29f2737fc22749221 | INFO     | module_admin.controller.task_controller:get_task_list:56 - 获取成功
+2025-04-27 12:47:03.144 | 074e6250f46e43f58c75af9cead7ce90 | INFO     | module_admin.controller.task_controller:add_task:75 - 新增成功
+2025-04-27 12:47:03.284 | 09d7697d0a844b97b5b9a56dc740ce7c | INFO     | module_admin.controller.task_controller:execute_system_task:113 - 执行成功
+2025-04-27 12:47:03.354 | d1d2840a54c745f686c9623d37d133e9 | INFO     | module_admin.controller.task_controller:stop_task:130 - 任务停止成功
+2025-04-27 12:47:03.369 | 2a04b50a19da4fa0bdd359cacc0516b5 | INFO     | module_admin.controller.task_controller:query_detail_task:33 - 获取task_uid为test_uid的信息成功
+2025-04-27 12:47:03.382 |  | INFO     | config.get_redis:close_redis_pool:52 - 关闭redis连接成功
+2025-04-27 12:49:52.298 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-04-27 12:49:52.299 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-04-27 12:49:52.328 |  | INFO     | config.get_db:init_create_table:26 - 数据库连接成功
+2025-04-27 12:49:52.329 |  | INFO     | config.get_redis:create_redis_pool:19 - 开始连接redis...
+2025-04-27 12:49:52.338 |  | INFO     | config.get_redis:create_redis_pool:32 - redis连接成功
+2025-04-27 12:49:52.339 |  | INFO     | server:lifespan:22 - RuoYi-FastAPI启动成功
+2025-04-27 12:49:52.397 | c09962b37a154ed9bd44cdb50a83f6ed | INFO     | module_admin.controller.task_controller:get_task_list:56 - 获取成功
+2025-04-27 12:49:52.456 | 942eff7c077045cd8f7963eb111a123f | INFO     | module_admin.controller.task_controller:add_task:75 - 新增成功
+2025-04-27 12:49:52.594 | f172672efb87431db4c18ab079489245 | INFO     | module_admin.controller.task_controller:execute_system_task:113 - 执行成功
+2025-04-27 12:49:52.656 | 85ee20c98f48403298b572d45aaf7a27 | INFO     | module_admin.controller.task_controller:stop_task:130 - 任务停止成功
+2025-04-27 12:49:52.670 | d221badb86d34c808c63f1b58c41b721 | INFO     | module_admin.controller.task_controller:query_detail_task:33 - 获取task_uid为test_uid的信息成功
+2025-04-27 12:49:52.681 |  | INFO     | config.get_redis:close_redis_pool:52 - 关闭redis连接成功
