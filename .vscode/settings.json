@@ -21,10 +21,13 @@
     "psutil",
     "pydantic",
     "pytest",
+    "PYTHONPATH",
     "rerunfailures",
     "ruoyi",
     "sessionmaker",
+    "sqlalchemy",
     "tornasync",
+    "venv",
     "xdist"
   ]
 }

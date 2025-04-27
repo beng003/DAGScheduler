@@ -134,7 +134,7 @@ class GetConfig:
             env_file = f".env.{run_env}"
             
         # 加载配置
-        load_dotenv(env_file)
+        load_dotenv("./env/" + env_file)
 
 
 # 实例化获取配置类
