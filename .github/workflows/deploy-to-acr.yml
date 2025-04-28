@@ -1,0 +1,35 @@
+name: Push Docker Image to ACR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 设置版本号（使用日期时间作为版本号）
+      - name: Set version
+        id: version
+        run: |
+          VERSION="v$(date +'%Y.%m.%d.%H%M')"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # 登录 ACR
+      - name: Login to ACR
+        run: echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_REGISTRY }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      # 构建 Docker 镜像
+      - name: Build Docker image
+        run: docker build -f Dockerfile -t ${{ secrets.ACR_REGISTRY }}/beng003_docker/dagscheduler-backend:${{ env.VERSION }} .
+
+      # 推送 Docker 镜像
+      - name: Push Docker image
+        run: docker push ${{ secrets.ACR_REGISTRY }}/beng003_docker/dagscheduler-backend:${{ env.VERSION }}
