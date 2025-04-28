@@ -1,8 +1,8 @@
 # 根目录执行
-# docker build -f docker/Dockerfile -t crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:v0.2.0 .
-# docker build -f docker/Dockerfile -t dagscheduler-backend:v0.2.0 .
+# docker build -f docker/Dockerfile -t crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:v0.1.0 .
+# docker build -f docker/Dockerfile -t dagscheduler-backend:v0.1.0 .
 
-FROM python:3.10-slim
+FROM crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/python:3.10-slim
 # 更新并安装 libgomp 以及 gcc 
 RUN apt-get update && apt-get install -y libgomp1 gcc && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
