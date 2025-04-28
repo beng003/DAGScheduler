@@ -2,7 +2,7 @@ services:
   backend:
     build:
       context: ../..  # 指定上下文为上级目录（项目根目录）
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     container_name: dev_backend_beng003
     ports:
       - "9099:9099"

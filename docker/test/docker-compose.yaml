@@ -2,7 +2,7 @@ services:
   backend:
     build:
       context: ../..  # 指定上下文为上级目录（项目根目录）
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     image: dagscheduler-backend:test  # 这里指定构建的镜像名称
     container_name: test_backend_beng003
     ports:
