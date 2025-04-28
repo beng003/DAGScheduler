@@ -1,0 +1,61 @@
+services:
+  backend:
+    image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:v0.4.0 # 这里指定构建的镜像名称
+    container_name: backend_beng003
+    ports:
+      - "9099:9099"
+    # volumes:
+    #   - ../../:/app # 宿主机路径:容器路径
+    networks:
+      - network_beng003
+    environment:
+      - APP_ENV=dep
+    depends_on:
+      mysql_beng003:
+        condition: service_healthy
+      redis_beng003:
+        condition: service_healthy
+
+  mysql_beng003:
+    image: mysql:8.0
+    restart: always
+    container_name: mysql_beng003
+    networks:
+      - network_beng003
+    # ports:
+    #   - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12341234
+      - MYSQL_DATABASE=DAGScheduler
+      # - TZ=Asia/Shanghai
+    volumes:
+      - test_mysql_data:/var/lib/mysql
+      # - ../sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-p12341234"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 10s  # 给MySQL启动的缓冲时间
+
+  redis_beng003:
+    image: redis:latest
+    container_name: redis_beng003
+    networks:
+      - network_beng003
+    # ports:
+    #   - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  test_mysql_data:
+
+networks:
+  network_beng003:
+    name: network_beng003 # 强制指定名称
+    driver: bridge
+    # external: true

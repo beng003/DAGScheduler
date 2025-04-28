@@ -1,5 +1,6 @@
 # 根目录执行
-# docker build -f docker/Dockerfile -t your-image-name .
+# docker build -f docker/Dockerfile -t crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:v0.2.0 .
+# docker build -f docker/Dockerfile -t dagscheduler-backend:v0.2.0 .
 
 FROM python:3.10-slim
 # 更新并安装 libgomp 以及 gcc 
@@ -9,4 +10,4 @@ COPY requirements-docker.txt .
 RUN pip install -r requirements-docker.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 COPY . .
 EXPOSE 9099
-CMD ["python3", "app.py", "--env=docker"]
+CMD ["python3", "app.py"]

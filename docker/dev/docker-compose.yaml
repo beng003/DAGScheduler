@@ -11,12 +11,7 @@ services:
     networks:
       - dev_network_beng003
     environment:
-      - DB_HOST=dev_mysql_beng003
-      - DB_PORT=3306
-      - DB_USER=root
-      - DB_PASSWORD=12341234
-      - REDIS_HOST=dev_redis_beng003
-      - REDIS_PORT=6379
+      - APP_ENV=dev
     depends_on:
       - dev_mysql_beng003
       - dev_redis_beng003

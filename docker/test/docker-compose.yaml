@@ -3,6 +3,7 @@ services:
     build:
       context: ../..  # 指定上下文为上级目录（项目根目录）
       dockerfile: docker/Dockerfile
+    image: dagscheduler-backend:test  # 这里指定构建的镜像名称
     container_name: test_backend_beng003
     ports:
       - "9099:9099"
@@ -11,12 +12,7 @@ services:
     networks:
       - test_network_beng003
     environment:
-      - DB_HOST=test_mysql_beng003
-      - DB_PORT=3306
-      - DB_USER=root
-      - DB_PASSWORD=12341234
-      - REDIS_HOST=test_redis_beng003
-      - REDIS_PORT=6379
+      - APP_ENV=test
     depends_on:
       - test_mysql_beng003
       - test_redis_beng003
