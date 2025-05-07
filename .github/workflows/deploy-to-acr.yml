@@ -26,10 +26,15 @@ jobs:
       - name: Login to ACR
         run: echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_REGISTRY }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
-      # 构建 Docker 镜像
+      # 构建 Docker 镜像（同时设置版本标签和latest标签）
       - name: Build Docker image
-        run: docker build -f Dockerfile -t ${{ secrets.ACR_REGISTRY }}/beng003_docker/dagscheduler-backend:${{ env.VERSION }} .
+        run: |
+          docker build -f Dockerfile -t ${{ secrets.ACR_REGISTRY }}/beng003_docker/dagscheduler-backend:${{ env.VERSION }} -t ${{ secrets.ACR_REGISTRY }}/beng003_docker/dagscheduler-backend:latest .
 
-      # 推送 Docker 镜像
-      - name: Push Docker image
+      # 推送带版本号的 Docker 镜像
+      - name: Push Docker image with version
         run: docker push ${{ secrets.ACR_REGISTRY }}/beng003_docker/dagscheduler-backend:${{ env.VERSION }}
+        
+      # 推送 latest 标签的 Docker 镜像
+      - name: Push Docker image with latest tag
+        run: docker push ${{ secrets.ACR_REGISTRY }}/beng003_docker/dagscheduler-backend:latest
