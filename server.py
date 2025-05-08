@@ -8,6 +8,8 @@ from utils.log_util import logger
 from module_admin.controller.task_controller import taskController
 from middlewares.trace_middleware import add_trace_middleware
 from exceptions.handle import handle_exception
+from middlewares.logging_middleware.logging_middleware import logging_middleware
+
 
 # 生命周期事件
 # note: contextlib生命周期管理（启动前准备 → 运行 → 关闭清理）
@@ -35,6 +37,10 @@ app = FastAPI(
 
 add_trace_middleware(app)  # 添加请求追踪中间件
 handle_exception(app)  # 添加全局异常处理器
+
+@app.middleware("http")
+async def db_logging_middleware(request, call_next):
+    return await logging_middleware(request, call_next)
 
 # 加载路由列表
 controller_list = [

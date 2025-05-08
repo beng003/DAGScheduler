@@ -36,3 +36,7 @@ twisted
 asgi_lifespan
 pytest-env==1.1.5
 xcrun==0.4
+
+
+opentelemetry-distro==0.53b1
+opentelemetry-instrumentation-fastapi

@@ -1,6 +1,6 @@
 services:
   backend:
-    image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:v0.4.0 # 这里指定构建的镜像名称
+    image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:latest # 这里指定构建的镜像名称
     container_name: backend_beng003
     ports:
       - "9099:9099"
