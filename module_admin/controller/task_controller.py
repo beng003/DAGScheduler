@@ -1,5 +1,5 @@
 from datetime import datetime
-from fastapi import APIRouter, Depends, Request, Form, Query
+from fastapi import APIRouter, Depends, Request, Form, Query, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from config.get_db import get_db
 from utils.log_util import logger
@@ -86,11 +86,14 @@ async def add_task(
 async def job_completed(
     request: Request,
     job_completed: JobExecuteResponseModel,
+    background_tasks: BackgroundTasks,
     query_db: AsyncSession = Depends(get_db),
 ):
     task_scheduler = TaskSchedulerService(request.app.state.redis, query_db)
-    await task_scheduler.handle_job_completion(
-        job_completed.job_uid, job_completed.success
+    background_tasks.add_task(
+        task_scheduler.handle_job_completion,
+        job_completed.job_uid,
+        job_completed.success
     )
     return ResponseUtil.success(
         msg="记录成功", dict_content={"job_uid": job_completed.job_uid}
@@ -116,7 +119,44 @@ async def execute_system_task(
         msg=execute_task_result.message,
         dict_content={"task_uid": execute_task.task_uid},
     )
+    
+    # import aiohttp
+    # import json
+    
+    # payload = json.dumps([
+    #     {
+    #         "job_uid": "psi3",
+    #         "job_executor": "default",
+    #         "invoke_target": "module_task.scheduler_test.job",
+    #         "job_args": "",
+    #         "job_kwargs": ""
+    #     },
+    #     {
+    #         "job_uid": "psi4",
+    #         "job_executor": "default",
+    #         "invoke_target": "module_task.scheduler_test.job",
+    #         "job_args": "",
+    #         "job_kwargs": ""
+    #     }
+    # ])
+    
+    # headers = {'Content-Type': 'application/json'}
+    
+    # async with aiohttp.ClientSession() as session:
+    #     try:
+    #         async with session.post(
+    #             "http://127.0.0.1:8088/operator/add_job",
+    #             data=payload,
+    #             headers=headers,
+    #             ssl=False  # 自签名证书需要关闭 SSL 验证
+    #         ) as response:
+    #             data = await response.text()
+    #             print(f"Status: {response.status}")
+    #             print(f"Response: {data}")
+    #     except aiohttp.ClientError as e:
+    #         print(f"Request failed: {e}")
 
+    # return ResponseUtil.success(msg="任务启动成功", dict_content={"task_uid": task_uid})
 
 @taskController.post("/task/stop")
 async def stop_task(

@@ -19,7 +19,6 @@ import asyncio
 from typing import List, Optional, Dict
 from datetime import datetime
 from utils.log_util import logger
-import aiohttp
 
 
 # 定义常量管理Redis键名
@@ -36,7 +35,6 @@ class JobSchedulerService:
     任务相关方法, 算子层接口
     单例模式实现
     """
-
     _instance = None
     _client = None
     _initialized = False
@@ -64,56 +62,51 @@ class JobSchedulerService:
             self.base_url = base_url
             self.timeout = timeout
             self.max_retries = max_retries
-            # 不在初始化时创建客户端，而是在需要时延迟创建
+            if JobSchedulerService._client is None:
+                JobSchedulerService._client = httpx.AsyncClient(
+                    base_url=base_url, timeout=timeout, limits=httpx.Limits(max_connections=100)
+                )
+            self.client = JobSchedulerService._client
             self._initialized = True
-
+            
             logger.info(f"初始化异步任务客户端完成, base_url={self.base_url}")
 
     async def __aenter__(self):
         return self
 
     async def __aexit__(self, exc_type, exc, tb):
-        return
-
+        return 
+        
     async def _send_request(
         self, method: str, endpoint: str, params: Dict = None, json: List[Dict] = None
     ) -> List[JobExecuteResponseModel]:
-        url = f"{self.base_url}{endpoint}"
         logger.info(
-            f"Sending request to {url} with \n params: {params} \n json: {json}"
+            f"Sending request to {self.base_url + endpoint} with \n params: {params} \n json: {json}"
         )
+
         headers = {"Content-Type": "application/json"}
 
-        # 使用上下文管理器确保客户端会话正确关闭
-        async with aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=self.timeout),
-            connector=aiohttp.TCPConnector(limit=100),
-        ) as client:
-            """核心请求方法（含重试逻辑）"""
-            for attempt in range(self.max_retries):
-                try:
-                    # 使用 aiohttp 发送请求
-                    async with client.request(
-                        method=method,
-                        url=url,
-                        params=params,
-                        json=json,
-                        headers=headers,
-                    ) as response:
-                        # 检查响应状态
-                        response.raise_for_status()
-                        # 解析响应数据
-                        data = await response.json()
-                        return [JobExecuteResponseModel(**item) for item in data["data"]]
-                except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-                    logger.error(
-                        f"请求失败(尝试 {attempt + 1}/{self.max_retries}): {str(e)}"
-                    )
-                    logger.error(f"请求详情: method={method}, url={url}")
-                    logger.error(f"请求参数: params={params}, json={json}")
-                    if attempt == self.max_retries - 1:
-                        raise RuntimeError(f"API请求失败: {str(e)}") from e
-                    await asyncio.sleep(2**attempt)
+        """核心请求方法（含重试逻辑）"""
+        for attempt in range(self.max_retries):
+            try:
+                response = await self.client.request(
+                    method=method,
+                    url=endpoint,
+                    params=params,
+                    json=json,
+                    headers=headers,
+                )
+                response.raise_for_status()
+                return [
+                    JobExecuteResponseModel(**item) for item in response.json()["data"]
+                ]
+            except (httpx.HTTPStatusError, httpx.RequestError) as e:
+                logger.error(f"请求失败(尝试 {attempt + 1}/{self.max_retries}): {str(e)}")
+                logger.error(f"请求详情: method={method}, url={self.base_url + endpoint}")
+                logger.error(f"请求参数: params={params}, json={json}")
+                if attempt == self.max_retries - 1:
+                    raise RuntimeError(f"API请求失败: {str(e)}") from e
+                await asyncio.sleep(2**attempt)
 
     async def add_jobs(
         self, job_info: List[JobExecuteModel]
@@ -144,9 +137,9 @@ class JobSchedulerService:
         assert response.status_code == 200, "添加失败"
         return True
 
-    # async def close(self):
-    #     """关闭连接池"""
-    #     await self.client.close()
+    async def close(self):
+        """关闭连接池"""
+        await self.client.aclose()
 
 
 class RedisJobStore:
