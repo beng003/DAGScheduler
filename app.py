@@ -12,4 +12,6 @@ if __name__ == '__main__':
         port=AppConfig.app_port,       # 服务端口（默认9099）
         root_path=AppConfig.app_root_path,  # question:API根路径（与前端代理配置/dev-api对应）
         reload=AppConfig.app_reload,  # 开发模式热重载（代码修改自动重启）
+        # reload=False,
+        # timeout_keep_alive=6000,
     )

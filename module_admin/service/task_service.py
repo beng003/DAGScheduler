@@ -70,8 +70,7 @@ class TaskService:
         :param page_object: 新增定时任务流对象
         :return: 新增定时任务流校验结果
         """
-        if not page_object.task_uid:
-            page_object.task_uid = str(uuid.uuid4())
+        page_object.task_uid = str(uuid.uuid4())
 
         if not await cls.check_task_unique_services(query_db, page_object):
             raise ServiceException(

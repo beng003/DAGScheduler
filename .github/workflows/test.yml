@@ -1,6 +1,9 @@
 name: CI(Tests with MySQL)
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   test:

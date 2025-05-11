@@ -105,7 +105,7 @@ async def execute_system_task(
 ):
     execute_task = TaskModel(
         task_uid=task_uid,
-        update_ime=datetime.now(),
+        update_time=datetime.now(),
     )
     execute_task_result = await TaskService.execute_task_once_services(
         query_db, execute_task, request.app.state.redis
