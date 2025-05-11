@@ -8,8 +8,6 @@ from utils.log_util import logger
 from module_admin.controller.task_controller import taskController
 from middlewares.trace_middleware import add_trace_middleware
 from exceptions.handle import handle_exception
-from middlewares.logging_middleware.logging_middleware import logging_middleware
-
 
 # 生命周期事件
 # note: contextlib生命周期管理（启动前准备 → 运行 → 关闭清理）
@@ -20,13 +18,13 @@ async def lifespan(app: FastAPI):
     worship()  # 打印启动艺术字
     await init_create_table()  # 初始化数据库表结构
     app.state.redis = await RedisUtil.create_redis_pool()  # 创建Redis连接池
-    app.state.redis_pool = app.state.redis.connection_pool
     logger.info(f'{AppConfig.app_name}启动成功')
     # 运行阶段
     yield
     # 关闭阶段
     await RedisUtil.close_redis_pool(app)  # 关闭Redis连接池
-
+    # await job_scheduler.close()
+    
 # FastAPI核心对象初始化
 app = FastAPI(
     title=AppConfig.app_name,  # 从配置读取应用名称
@@ -37,10 +35,6 @@ app = FastAPI(
 
 add_trace_middleware(app)  # 添加请求追踪中间件
 handle_exception(app)  # 添加全局异常处理器
-
-@app.middleware("http")
-async def db_logging_middleware(request, call_next):
-    return await logging_middleware(request, call_next)
 
 # 加载路由列表
 controller_list = [

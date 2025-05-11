@@ -1,5 +1,5 @@
 task_data = {
-    "task_uid": "test_uid",
+    "task_uid": "03414a73-dc74-4b51-a894-75ec47d153d0",
     "task_name": "task2",
     "task_initiator": "alice",
     "task_group": "default",
@@ -33,3 +33,5 @@ task_data = {
     "priority": "0",
     "remark": "test",
 }
+
+job_list = [{'job_uid': 'psi3', 'job_executor': 'default', 'invoke_target': 'module_task.scheduler_test.job', 'job_args': '', 'job_kwargs': ''}]

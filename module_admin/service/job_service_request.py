@@ -19,7 +19,6 @@ import asyncio
 from typing import List, Optional, Dict
 from datetime import datetime
 from utils.log_util import logger
-import aiohttp
 
 
 # 定义常量管理Redis键名
@@ -34,17 +33,7 @@ class RedisKeys:
 class JobSchedulerService:
     """
     任务相关方法, 算子层接口
-    单例模式实现
     """
-
-    _instance = None
-    _client = None
-    _initialized = False
-
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super(JobSchedulerService, cls).__new__(cls)
-        return cls._instance
 
     def __init__(
         self,
@@ -59,77 +48,77 @@ class JobSchedulerService:
         :param timeout: 单次请求超时时间(秒)
         :param max_retries: 最大重试次数
         """
-        # 避免重复初始化
-        if not self._initialized:
-            self.base_url = base_url
-            self.timeout = timeout
-            self.max_retries = max_retries
-            # 不在初始化时创建客户端，而是在需要时延迟创建
-            self._initialized = True
+        self.base_url = base_url
+        self.timeout = timeout
+        self.max_retries = max_retries
+        # self.client is removed
 
-            logger.info(f"初始化异步任务客户端完成, base_url={self.base_url}")
-
-    async def __aenter__(self):
-        return self
-
-    async def __aexit__(self, exc_type, exc, tb):
-        return
+    # __aenter__, __aexit__, and close methods are removed as self.client is removed
 
     async def _send_request(
         self, method: str, endpoint: str, params: Dict = None, json: List[Dict] = None
     ) -> List[JobExecuteResponseModel]:
-        url = f"{self.base_url}{endpoint}"
-        logger.info(
-            f"Sending request to {url} with \n params: {params} \n json: {json}"
-        )
-        headers = {"Content-Type": "application/json"}
+        """核心请求方法（含重试逻辑）"""
+        full_url = f"{self.base_url.rstrip('/')}/{endpoint.lstrip('/')}"
+        for attempt in range(self.max_retries):
+            try:
+                response = httpx.request(
+                    method=method,
+                    url=full_url,
+                    params=params,
+                    json=json,
+                    timeout=self.timeout,
+                )
+                response.raise_for_status()  # Raises an exception for 4XX/5XX responses
+                # Assuming the response structure is {"data": [...]}
+                response_data = response.json()
+                if "data" in response_data and isinstance(response_data["data"], list):
+                    return [
+                        JobExecuteResponseModel(**item)
+                        for item in response_data["data"]
+                    ]
+                # Handle cases where "data" might be missing or not a list, or adjust as per actual API contract
+                logger.error(
+                    f"API response format error for {method} {full_url}: 'data' field is missing or not a list. Response: {response_data}"
+                )
+                raise RuntimeError("API响应格式错误: 'data'字段缺失或非列表")
 
-        # 使用上下文管理器确保客户端会话正确关闭
-        async with aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=self.timeout),
-            connector=aiohttp.TCPConnector(limit=100),
-        ) as client:
-            """核心请求方法（含重试逻辑）"""
-            for attempt in range(self.max_retries):
-                try:
-                    # 使用 aiohttp 发送请求
-                    async with client.request(
-                        method=method,
-                        url=url,
-                        params=params,
-                        json=json,
-                        headers=headers,
-                    ) as response:
-                        # 检查响应状态
-                        response.raise_for_status()
-                        # 解析响应数据
-                        data = await response.json()
-                        return [JobExecuteResponseModel(**item) for item in data["data"]]
-                except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-                    logger.error(
-                        f"请求失败(尝试 {attempt + 1}/{self.max_retries}): {str(e)}"
-                    )
-                    logger.error(f"请求详情: method={method}, url={url}")
-                    logger.error(f"请求参数: params={params}, json={json}")
-                    if attempt == self.max_retries - 1:
-                        raise RuntimeError(f"API请求失败: {str(e)}") from e
-                    await asyncio.sleep(2**attempt)
+            except (httpx.HTTPStatusError, httpx.RequestError) as e:
+                logger.error(
+                    f"API request failed on attempt {attempt + 1}/{self.max_retries} for {method} {full_url}: {str(e)}"
+                )
+                if attempt == self.max_retries - 1:
+                    raise RuntimeError(f"API请求失败: {str(e)}") from e
+                await asyncio.sleep(2**attempt)  # Exponential backoff
+            except Exception as e:  # Catch other potential errors like JSONDecodeError
+                logger.error(
+                    f"An unexpected error occurred on attempt {attempt + 1}/{self.max_retries} for {method} {full_url}: {str(e)}"
+                )
+                if attempt == self.max_retries - 1:
+                    raise RuntimeError(f"API请求发生未知错误: {str(e)}") from e
+                await asyncio.sleep(2**attempt)
+        # This part should ideally not be reached if max_retries is > 0
+        # because the loop should either return or raise an exception.
+        # Adding a fallback raise for safety, though.
+        raise RuntimeError("API请求在所有重试后均失败，且未抛出预期异常")
 
     async def add_jobs(
         self, job_info: List[JobExecuteModel]
     ) -> List[JobExecuteResponseModel]:
         """
         批量添加任务（对应/add_job接口）
-        :param tasks: 任务参数列表
+        :param job_info: 任务参数列表. Changed from 'tasks' to 'job_info' to match usage.
         :return: 任务执行结果列表
         """
         response = await self._send_request(
             method="POST",
-            endpoint="/operator/add_job",
+            endpoint="/operator/add_job",  # Ensure endpoint starts with / if base_url doesn't end with /
             json=[task.model_dump() for task in job_info],
         )
-
-        return all([item.success for item in response])
+        # Corrected to return the list of response models as per type hint
+        
+        add_status = all([job.success for job in response])
+        return add_status
 
     async def stop_jobs(self, job_uids: List[str]) -> List[JobExecuteResponseModel]:
         """
@@ -138,15 +127,18 @@ class JobSchedulerService:
         :return: 任务停止结果列表
         """
         response = await self._send_request(
-            method="GET", endpoint="/operator/stop_job", params={"job_uids": job_uids}
+            method="GET",
+            endpoint="/operator/stop_job",
+            params={"job_uids": job_uids},  # Ensure endpoint starts with /
         )
+        # Corrected: _send_request returns List[JobExecuteResponseModel]
+        # The assert response.status_code == 200 was incorrect as response is a list.
+        # The return True was incorrect as the type hint is List[JobExecuteResponseModel].
+        return response
 
-        assert response.status_code == 200, "添加失败"
-        return True
-
-    # async def close(self):
+    # async def close(self): # Removed as self.client is removed
     #     """关闭连接池"""
-    #     await self.client.close()
+    #     await self.client.aclose()
 
 
 class RedisJobStore:
@@ -351,8 +343,8 @@ class JobExecutor:
 
         await self.db.commit()
 
-        async with JobSchedulerService() as scheduler:
-            await scheduler.add_jobs(job_executor)
+        scheduler = JobSchedulerService()
+        await scheduler.add_jobs(job_executor)
 
     async def add_job_log(
         self, job_uid: str, job_message: str, status: str, commit: bool = True

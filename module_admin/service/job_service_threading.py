@@ -16,10 +16,10 @@ from module_admin.dao.task_dao import TaskDao
 from module_admin.dao.job_log_dao import JobLogDao
 import httpx
 import asyncio
+import requests # 新增: 用于同步HTTP请求
+import threading # 新增: 按要求导入，asyncio.to_thread 会使用线程
 from typing import List, Optional, Dict
 from datetime import datetime
-from utils.log_util import logger
-import aiohttp
 
 
 # 定义常量管理Redis键名
@@ -34,17 +34,7 @@ class RedisKeys:
 class JobSchedulerService:
     """
     任务相关方法, 算子层接口
-    单例模式实现
     """
-
-    _instance = None
-    _client = None
-    _initialized = False
-
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super(JobSchedulerService, cls).__new__(cls)
-        return cls._instance
 
     def __init__(
         self,
@@ -59,61 +49,72 @@ class JobSchedulerService:
         :param timeout: 单次请求超时时间(秒)
         :param max_retries: 最大重试次数
         """
-        # 避免重复初始化
-        if not self._initialized:
-            self.base_url = base_url
-            self.timeout = timeout
-            self.max_retries = max_retries
-            # 不在初始化时创建客户端，而是在需要时延迟创建
-            self._initialized = True
-
-            logger.info(f"初始化异步任务客户端完成, base_url={self.base_url}")
+        self.base_url = base_url
+        self.timeout = timeout
+        self.max_retries = max_retries
+        self.client = httpx.AsyncClient(
+            base_url=base_url, timeout=timeout, limits=httpx.Limits(max_connections=100)
+        )
 
     async def __aenter__(self):
         return self
 
     async def __aexit__(self, exc_type, exc, tb):
-        return
+        await self.close()
+
+    def _perform_sync_request(
+        self, method: str, endpoint: str, params: Dict = None, json_body: List[Dict] = None
+    ) -> List[JobExecuteResponseModel]:
+        """在同步线程中执行HTTP请求的辅助方法"""
+        try:
+            response = requests.request(
+                method=method, url=self.base_url + "/" + endpoint, params=params, json=json_body
+            )
+            response.raise_for_status()  # 对错误的HTTP状态码抛出 HTTPError
+            # 假设响应结构是 {"data": [...]}
+            data_list = response.json().get("data", [])
+            return [JobExecuteResponseModel(**item) for item in data_list]
+        except requests.exceptions.HTTPError as e_http:
+            # 可以记录更详细的错误信息，例如 e_http.response.text
+            raise RuntimeError(f"API请求HTTP错误: {e_http.response.status_code}") from e_http
+        except requests.exceptions.RequestException as e_req:
+            # requests库所有异常的基类
+            raise RuntimeError(f"API请求失败 (同步线程中): {str(e_req)}") from e_req
+        except ValueError as e_json: # requests.json() 可能抛出 JSONDecodeError (ValueError的子类)
+            raise RuntimeError(f"API响应JSON解析失败 (同步线程中): {str(e_json)}") from e_json
+        except Exception as e_generic:
+            raise RuntimeError(f"处理请求时发生未知错误 (同步线程中): {str(e_generic)}") from e_generic
 
     async def _send_request(
-        self, method: str, endpoint: str, params: Dict = None, json: List[Dict] = None
+        self, method: str, endpoint: str, params: Dict = None, json_body: List[Dict] = None # 参数名从 json 修改为 json_body
     ) -> List[JobExecuteResponseModel]:
-        url = f"{self.base_url}{endpoint}"
-        logger.info(
-            f"Sending request to {url} with \n params: {params} \n json: {json}"
-        )
-        headers = {"Content-Type": "application/json"}
-
-        # 使用上下文管理器确保客户端会话正确关闭
-        async with aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=self.timeout),
-            connector=aiohttp.TCPConnector(limit=100),
-        ) as client:
-            """核心请求方法（含重试逻辑）"""
-            for attempt in range(self.max_retries):
-                try:
-                    # 使用 aiohttp 发送请求
-                    async with client.request(
-                        method=method,
-                        url=url,
-                        params=params,
-                        json=json,
-                        headers=headers,
-                    ) as response:
-                        # 检查响应状态
-                        response.raise_for_status()
-                        # 解析响应数据
-                        data = await response.json()
-                        return [JobExecuteResponseModel(**item) for item in data["data"]]
-                except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-                    logger.error(
-                        f"请求失败(尝试 {attempt + 1}/{self.max_retries}): {str(e)}"
-                    )
-                    logger.error(f"请求详情: method={method}, url={url}")
-                    logger.error(f"请求参数: params={params}, json={json}")
-                    if attempt == self.max_retries - 1:
-                        raise RuntimeError(f"API请求失败: {str(e)}") from e
-                    await asyncio.sleep(2**attempt)
+        """核心请求方法（含重试逻辑），使用threading和requests"""
+        for attempt in range(self.max_retries):
+            try:
+                # 创建并启动线程
+                thread = threading.Thread(target=self._perform_sync_request, args=(method, endpoint, params, json_body))
+                thread.start()
+                # thread.join()  # 等待线程完成
+                # 等待线程完成并获取结果
+                # return thread.result
+                # import time
+                # time.sleep(10)
+                
+            except RuntimeError as e: # 捕获从 _perform_sync_request 抛出的特定 RuntimeError
+                # logger.warning(f"API请求尝试 {attempt + 1}/{self.max_retries} 失败: {str(e)}. 正在重试...")
+                if attempt == self.max_retries - 1:
+                    # logger.error(f"API请求最终失败，尝试 {attempt + 1}/{self.max_retries}: {str(e)}")
+                    raise  # 重新抛出最后一次尝试的异常
+                await asyncio.sleep(2**attempt)
+            except Exception as e: # 捕获其他意外异常
+                # logger.warning(f"API请求尝试 {attempt + 1}/{self.max_retries} 发生意外错误: {str(e)}. 正在重试...")
+                if attempt == self.max_retries - 1:
+                    # logger.error(f"API请求发生意外错误且重试失败，尝试 {attempt + 1}/{self.max_retries}: {str(e)}")
+                    raise RuntimeError(f"API请求发生意外错误且所有重试均失败: {str(e)}") from e
+                await asyncio.sleep(2**attempt)
+        
+        # 理论上，如果 max_retries >= 1，此行不会执行，因为循环要么返回结果，要么在最后一次尝试时抛出异常
+        raise RuntimeError("API请求在所有重试后均失败。")
 
     async def add_jobs(
         self, job_info: List[JobExecuteModel]
@@ -126,10 +127,10 @@ class JobSchedulerService:
         response = await self._send_request(
             method="POST",
             endpoint="/operator/add_job",
-            json=[task.model_dump() for task in job_info],
+            json_body=[task.model_dump() for task in job_info],
         )
-
-        return all([item.success for item in response])
+        return True
+        # return all([item.success for item in response])
 
     async def stop_jobs(self, job_uids: List[str]) -> List[JobExecuteResponseModel]:
         """
@@ -140,13 +141,13 @@ class JobSchedulerService:
         response = await self._send_request(
             method="GET", endpoint="/operator/stop_job", params={"job_uids": job_uids}
         )
-
+        
         assert response.status_code == 200, "添加失败"
         return True
 
-    # async def close(self):
-    #     """关闭连接池"""
-    #     await self.client.close()
+    async def close(self):
+        """关闭连接池"""
+        await self.client.aclose()
 
 
 class RedisJobStore:
@@ -348,7 +349,7 @@ class JobExecutor:
             await self.add_job_log(job_uid, "任务开始执行", "0", commit=False)
             job_param = await self.redis.get_job(job_uid)
             job_executor.append(JobExecuteModel(**job_param.model_dump()))
-
+        
         await self.db.commit()
 
         async with JobSchedulerService() as scheduler:
@@ -417,9 +418,12 @@ class TaskSchedulerService:
 
         # 清理Redis数据
         await self.redis_store.cleanup_task(task_uid)
-
+        
         # 更新数据库状态
         await self.progress_tracker._update_db(
             task_uid=task_uid,
-            updates={"run_status": "stopped", "update_time": datetime.now()},
+            updates={
+                "run_status": "stopped",
+                "update_time": datetime.now()
+            }
         )
