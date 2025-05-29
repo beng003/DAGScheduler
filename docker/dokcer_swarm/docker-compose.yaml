@@ -1,0 +1,162 @@
+# docker stack deploy -c docker-compose.yaml myapp
+# docker stack rm myapp
+
+services:
+  dag_scheduler_alice:
+    image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:latest
+    ports:
+      - target: 9099
+        published: 9099
+        mode: host  # 指定host模式
+    networks:
+      - network_beng003
+    environment:
+      - APP_ENV=alice
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == LSSP
+      restart_policy:
+        condition: any
+    depends_on:
+      - mysql_alice
+        redis_alice
+        operator_alice
+
+  dag_scheduler_bob:
+    image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:latest
+    ports:
+      - target: 9099
+        published: 9099
+        mode: host  # 指定host模式
+    networks:
+      - network_beng003
+    environment:
+      - APP_ENV=bob
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == vulmtc
+      restart_policy:
+        condition: any
+    depends_on:
+      - mysql_bob
+        redis_bob
+        operator_bob
+
+  operator_alice:
+    image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/operator:latest
+    networks:
+      - network_beng003
+    environment:
+      - APP_ENV=swarm
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == LSSP
+      restart_policy:
+        condition: any
+
+  operator_bob:
+    image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/operator:latest
+    networks:
+      - network_beng003
+    environment:
+      - APP_ENV=swarm
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == vulmtc
+      restart_policy:
+        condition: any
+
+  mysql_alice:
+    image: mysql:8.0
+    networks:
+      - network_beng003
+    environment:
+      - MYSQL_ROOT_PASSWORD=12341234
+      - MYSQL_DATABASE=DAGScheduler
+    volumes:
+      - test_mysql_data_alice:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-p12341234"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == LSSP
+      restart_policy:
+        condition: any
+
+  mysql_bob:
+    image: mysql:8.0
+    networks:
+      - network_beng003
+    environment:
+      - MYSQL_ROOT_PASSWORD=12341234
+      - MYSQL_DATABASE=DAGScheduler
+    volumes:
+      - test_mysql_data_bob:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-p12341234"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == vulmtc
+      restart_policy:
+        condition: any
+
+  redis_alice:
+    image: redis:latest
+    networks:
+      - network_beng003
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == LSSP
+      restart_policy:
+        condition: any
+
+  redis_bob:
+    image: redis:latest
+    networks:
+      - network_beng003
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == vulmtc
+      restart_policy:
+        condition: any
+
+volumes:
+  test_mysql_data_alice:
+  test_mysql_data_bob:
+
+networks:
+  network_beng003:
+    # name: network_beng003
+    driver: overlay
+    driver_opts:
+      encrypted: ""
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.100.0/24

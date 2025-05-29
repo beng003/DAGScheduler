@@ -20,6 +20,7 @@ from typing import List, Optional, Dict
 from datetime import datetime
 from utils.log_util import logger
 import aiohttp
+from config.env import OperatorConfig
 
 
 # 定义常量管理Redis键名
@@ -49,7 +50,7 @@ class JobSchedulerService:
     def __init__(
         self,
         # base_url: str = "http://127.0.0.1:8088/dev-api",
-        base_url: str = "http://127.0.0.1:8088",
+        base_url: str = f"http://{OperatorConfig.operator_host}:{OperatorConfig.operator_port}",
         timeout: float = 30.0,
         max_retries: int = 3,
     ):

@@ -59,6 +59,15 @@ class RedisSettings(BaseSettings):
     redis_database: int = 2
 
 
+class OperatorSettings(BaseSettings):
+    """
+    算子层配置
+    """
+    operator_host: str = "127.0.0.1"
+    operator_port: int = 8088
+    operator_root_path: str = ""
+    operator_version: str = "1.0.0"
+
 
 class GetConfig:
     """
@@ -91,6 +100,14 @@ class GetConfig:
         """
         # 实例化Redis配置模型
         return RedisSettings()
+    
+    @lru_cache()
+    def get_operator_config(self):
+        """
+        获取算子层配置
+        """
+        # 实例化算子层配置模型
+        return OperatorSettings()
 
     @staticmethod
     def parse_cli_args():
@@ -145,3 +162,5 @@ AppConfig = get_config.get_app_config()
 DataBaseConfig = get_config.get_database_config()
 # Redis配置
 RedisConfig = get_config.get_redis_config()
+# operator算子层配置
+OperatorConfig = get_config.get_operator_config()

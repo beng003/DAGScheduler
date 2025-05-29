@@ -2,7 +2,7 @@
 __pycache__
 logs
 ./coverage.xml
-./todo.md
 ./.coverage
 *.log
 .envrc
+todo.md

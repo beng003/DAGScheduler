@@ -1,7 +1,7 @@
 services:
-  backend:
+  dag_scheduler:
     image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:latest # 这里指定构建的镜像名称
-    container_name: backend_beng003
+    container_name: dag_scheduler
     ports:
       - "9099:9099"
     # volumes:
@@ -15,6 +15,23 @@ services:
         condition: service_healthy
       redis_beng003:
         condition: service_healthy
+      operator:
+        condition: service_started
+
+  operator:
+    image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/operator:latest # 这里指定构建的镜像名称
+    container_name: operator
+    ports:
+      - "8088:8088"
+      - "11666:11666"
+      - "11667:11667"
+    # volumes:
+    #   - ../../:/app # 宿主机路径:容器路径
+    networks:
+      - network_beng003
+    environment:
+      - APP_ENV=dep
+    
 
   mysql_beng003:
     image: mysql:8.0
@@ -58,4 +75,5 @@ networks:
   network_beng003:
     name: network_beng003 # 强制指定名称
     driver: bridge
+    # driver: overlay
     # external: true
