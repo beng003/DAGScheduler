@@ -23,7 +23,7 @@ param:
           http_timeout_ms: 1200000
           recv_timeout_ms: 1200000
     sf_init:
-      address: alice_operator:6379
+      address: bob_operator:6379
       cluster_config:
         parties:
           alice:
@@ -32,7 +32,7 @@ param:
           bob:
             address: bob_operator:9200
             listen_addr: 0.0.0.0:9200
-        self_party: alice
+        self_party: bob
   sf_node_eval_param:
     input_path:
       alice: /app/local_data/alice/alice.csv
