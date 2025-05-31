@@ -9,8 +9,8 @@ param:
             - address: alice_operator:9100
               listen_address: 0.0.0.0:9100
               party: alice
-            - address: bob_operator:9100
-              listen_address: 0.0.0.0:9100
+            - address: alice_operator:9200
+              listen_address: 0.0.0.0:9200
               party: bob
           runtime_config:
             field: 3
@@ -23,16 +23,10 @@ param:
           http_timeout_ms: 1200000
           recv_timeout_ms: 1200000
     sf_init:
-      address: alice_operator:6379
-      cluster_config:
-        parties:
-          alice:
-            address: alice_operator:9200
-            listen_addr: 0.0.0.0:9200
-          bob:
-            address: bob_operator:9200
-            listen_addr: 0.0.0.0:9200
-        self_party: alice
+      address: local
+      parties:
+      - alice
+      - bob
   sf_node_eval_param:
     input_path:
       alice: /app/local_data/alice/alice.csv

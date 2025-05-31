@@ -1,38 +1,24 @@
 services:
-  npm-zh:
-    image: 'chishin/nginx-proxy-manager-zh:release'
-    # restart: always
-    container_name: npm-zh
-    ports:
-      - '20080:80'
-      - '20081:81'
-      - '20443:443'
-    volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
-    networks:
-      - network_beng003
-
-  dag_scheduler:
+  alice_dag_scheduler:
     image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:latest # 这里指定构建的镜像名称
-    container_name: dag_scheduler
+    container_name: alice_dag_scheduler
     # ports:
     #   - "8088:9099"
     networks:
       - network_beng003
     environment:
-      - APP_ENV=dep
+      - APP_ENV=alice
     depends_on:
-      mysql_beng003:
+      alice_mysql:
         condition: service_healthy
-      redis_beng003:
+      alice_redis:
         condition: service_healthy
-      operator:
+      alice_operator:
         condition: service_started
 
-  operator:
+  alice_operator:
     image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/operator:latest # 这里指定构建的镜像名称
-    container_name: operator
+    container_name: alice_operator
     # volumes:
     #   - ../../:/app # 宿主机路径:容器路径
     shm_size: 1gb
@@ -41,10 +27,10 @@ services:
     environment:
       - APP_ENV=dep
     
-  mysql_beng003:
+  alice_mysql:
     image: mysql:8.0
     restart: always
-    container_name: mysql_beng003
+    container_name: alice_mysql
     networks:
       - network_beng003
     # ports:
@@ -54,7 +40,7 @@ services:
       - MYSQL_DATABASE=DAGScheduler
       # - TZ=Asia/Shanghai
     volumes:
-      - test_mysql_data:/var/lib/mysql
+      - alice_mysql_data:/var/lib/mysql
       # - ../sql:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-uroot", "-p12341234"]
@@ -63,9 +49,9 @@ services:
       retries: 10
       start_period: 10s  # 给MySQL启动的缓冲时间
 
-  redis_beng003:
+  alice_redis:
     image: redis:latest
-    container_name: redis_beng003
+    container_name: alice_redis
     networks:
       - network_beng003
     # ports:
@@ -77,11 +63,8 @@ services:
       retries: 5
 
 volumes:
-  test_mysql_data:
+  alice_mysql_data:
 
 networks:
   network_beng003:
-    name: network_beng003 # 强制指定名称
     driver: bridge
-    # driver: overlay
-    # external: true
