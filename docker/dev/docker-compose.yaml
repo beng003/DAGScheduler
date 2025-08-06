@@ -1,20 +1,20 @@
 services:
-  backend:
-    build:
-      context: ../..  # 指定上下文为上级目录（项目根目录）
-      dockerfile: Dockerfile
-    container_name: dev_backend_beng003
-    ports:
-      - "9099:9099"
-    volumes:
-      - ../../:/app # 宿主机路径:容器路径
-    networks:
-      - dev_network_beng003
-    environment:
-      - APP_ENV=dev
-    depends_on:
-      - dev_mysql_beng003
-      - dev_redis_beng003
+  # backend:
+  #   build:
+  #     context: ../..  # 指定上下文为上级目录（项目根目录）
+  #     dockerfile: Dockerfile
+  #   container_name: dev_backend_beng003
+  #   ports:
+  #     - "9099:9099"
+  #   volumes:
+  #     - ../../:/app # 宿主机路径:容器路径
+  #   networks:
+  #     - dev_network_beng003
+  #   environment:
+  #     - APP_ENV=dev
+  #   depends_on:
+  #     - dev_mysql_beng003
+  #     - dev_redis_beng003
 
   dev_mysql_beng003:
     image: mysql:8.0
@@ -22,11 +22,11 @@ services:
     container_name: dev_mysql_beng003
     networks:
       - dev_network_beng003
-    # ports:
-    #   - "3307:3306"
+    ports:
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=12341234
-      - MYSQL_DATABASE=DAGScheduler
+      - MYSQL_DATABASE=ruoyi_fastapi_beng003
       # - TZ=Asia/Shanghai
     volumes:
       - dev_mysql_data:/var/lib/mysql
@@ -42,8 +42,8 @@ services:
     container_name: dev_redis_beng003
     networks:
       - dev_network_beng003
-    # ports:
-    #   - "6380:6379"
+    ports:
+      - "6379:6379"
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 5s

@@ -6,3 +6,4 @@ logs
 *.log
 .envrc
 todo.md
+./docker/nginx/data

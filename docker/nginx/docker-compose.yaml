@@ -40,6 +40,7 @@ services:
         ipv4_address: 192.168.0.10
     environment:
       - APP_ENV=alice
+      - RAY_NODE_DOMAIN=alice_operator
 
   alice_mysql:
     image: mysql:8.0
@@ -47,8 +48,8 @@ services:
     container_name: alice_mysql
     networks:
       - network_beng003
-    # ports:
-    #   - "3306:3306"
+    ports:
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=12341234
       - MYSQL_DATABASE=DAGScheduler
@@ -104,6 +105,7 @@ services:
         ipv4_address: 192.168.0.11
     environment:
       - APP_ENV=bob
+      - RAY_NODE_DOMAIN=bob_operator
 
   bob_mysql:
     image: mysql:8.0

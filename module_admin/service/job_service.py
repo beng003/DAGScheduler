@@ -105,7 +105,9 @@ class JobSchedulerService:
                         response.raise_for_status()
                         # 解析响应数据
                         data = await response.json()
-                        return [JobExecuteResponseModel(**item) for item in data["data"]]
+                        return [
+                            JobExecuteResponseModel(**item) for item in data["data"]
+                        ]
                 except (aiohttp.ClientError, asyncio.TimeoutError) as e:
                     logger.error(
                         f"请求失败(尝试 {attempt + 1}/{self.max_retries}): {str(e)}"
@@ -389,7 +391,12 @@ class TaskSchedulerService:
             await self.redis_store.store_job(job)
             await self.dependency_mgr.register_dependencies(job)
 
-    async def handle_job_completion(self, job_uid: str, success: bool):
+    async def handle_job_completion(
+        self,
+        job_uid: str,
+        success: bool,
+        error_detail: Optional[str] = None,
+    ):
         """处理任务完成事件"""
         job = await self.redis_store.get_job(job_uid)
         if not job or not job.task_uid:
@@ -403,7 +410,7 @@ class TaskSchedulerService:
             await self.executor.execute_all_ready_jobs()  # 触发后续任务执行
         else:
             # todo: 记录日志错误信息
-            await self.executor.add_job_log(job_uid, "任务执行失败", "1")
+            await self.executor.add_job_log(job_uid, error_detail, "1")
             await self.progress_tracker.mark_failed(job.task_uid)
 
     async def stop_task(self, task_uid: str):

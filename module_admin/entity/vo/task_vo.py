@@ -96,6 +96,7 @@ class JobExecuteResponseModel(BaseModel):
         default=None, max_length=64, description="任务UID，唯一标识"
     )
     success: bool = Field(default=False, description="是否成功")
+    error_detail: Optional[str] = Field(default=None, description="错误详情")
 
 
 class TaskModel(BaseModel):

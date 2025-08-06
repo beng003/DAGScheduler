@@ -93,7 +93,8 @@ async def job_completed(
     background_tasks.add_task(
         task_scheduler.handle_job_completion,
         job_completed.job_uid,
-        job_completed.success
+        job_completed.success,
+        job_completed.error_detail,
     )
     return ResponseUtil.success(
         msg="记录成功", dict_content={"job_uid": job_completed.job_uid}
