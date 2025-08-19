@@ -7,3 +7,4 @@ logs
 .envrc
 todo.md
 ./docker/nginx/data
+caddyfile.txt

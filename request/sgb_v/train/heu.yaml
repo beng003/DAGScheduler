@@ -1,0 +1,10 @@
+evaluators:
+  - party: bob
+he_parameters:
+  key_pair:
+    generate:
+      bit_size: 2048
+  schema: ou
+mode: PHEU
+sk_keeper:
+  party: alice

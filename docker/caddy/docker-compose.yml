@@ -1,16 +1,19 @@
 services:
-  nginx_app:
-    image: "chishin/nginx-proxy-manager-zh:release"
-    restart: always
+  caddy:
+    image: sliamb/caddy:latest
+    container_name: caddy
+    environment:
+      - TZ=Asia/Shanghai
+      - DNS=223.5.5.5,8.8.8.8,127.0.0.11
     ports:
       - "8000:80"
-      - "8100:81"
       - "44300:443"
-    networks:
-      - network_beng003
+      - "20190:2019"
     volumes:
       - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+      - caddy_config:/config
+    networks:
+      - network_beng003
 
   alice_dag_scheduler:
     image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:latest # 这里指定构建的镜像名称
@@ -18,7 +21,8 @@ services:
     # ports:
     #   - "8088:9099"
     networks:
-      - network_beng003
+      network_beng003:
+        ipv4_address: 192.168.0.9
     environment:
       - APP_ENV=alice
     depends_on:
@@ -69,8 +73,8 @@ services:
     container_name: alice_redis
     networks:
       - network_beng003
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -83,7 +87,8 @@ services:
     # ports:
     #   - "8088:9099"
     networks:
-      - network_beng003
+      network_beng003:
+        ipv4_address: 192.168.0.12
     environment:
       - APP_ENV=bob
     depends_on:
@@ -145,6 +150,7 @@ services:
 volumes:
   alice_mysql_data:
   bob_mysql_data:
+  caddy_config:
 
 networks:
   network_beng003:
@@ -154,14 +160,3 @@ networks:
       config:
         - subnet: 192.168.0.0/24
           gateway: 192.168.0.1
-# services:
-#   app:
-#     image: 'docker.io/jc21/nginx-proxy-manager:latest'
-#     restart: unless-stopped
-#     ports:
-#       - '80:80'
-#       - '81:81'
-#       - '443:443'
-#     volumes:
-#       - ./data:/data
-#       - ./letsencrypt:/etc/letsencrypt
