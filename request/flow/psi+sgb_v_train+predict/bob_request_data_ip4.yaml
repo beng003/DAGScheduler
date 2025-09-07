@@ -1,0 +1,63 @@
+concurrent: "1"
+cron_expression: 0/10 * * * * ?
+misfire_policy: "3"
+priority: "0"
+remark: test
+status: "1"
+task_group: default
+task_initiator: alice
+task_name: task_flow_psi+sgb_v_train
+task_uid: job-alice-bob-040
+task_yaml:
+  - invoke_target: module_task.sgb_v.sgb_v_train
+    job_args: ""
+    job_dependencies: '["psi"]'
+    job_executor: default
+    job_kwargs:
+      '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes":
+      [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"},
+      {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}],
+      "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type":
+      "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000,
+      "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}},
+      "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair":
+      {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper":
+      {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config":
+      {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"},
+      "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party":
+      "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "psi-output.csv", "bob":
+      "psi-output.csv"}, "output_path": {"alice": "sgb-output.csv", "bob": "sgb-output.csv"},
+      "keys": {"alice": ["id1"], "bob": ["id2"]}, "saving_path_dict": {"alice": "sgb-model",
+      "bob": "sgb-model"}, "label_holder": "bob", "psi_protocl": "KKRT_PSI_2PC"}}'
+    job_name: sgb_v_train
+    job_parties: '["party1","party2"]'
+    job_uid: sgb_v_train
+  - invoke_target: module_task.psi.psi_csv
+    job_args: ""
+    job_dependencies: "[]"
+    job_executor: default
+    job_kwargs:
+      '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes":
+      [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"},
+      {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}],
+      "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type":
+      "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000,
+      "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}},
+      "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice":
+      {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address":
+      "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}},
+      "sf_node_eval_param": {"input_path": {"alice": "/app/local_data/alice/alice.csv",
+      "bob": "/app/local_data/bob/bob.csv"}, "key": {"alice": ["id1"], "bob": ["id2"]},
+      "output_path": {"alice": "/app/local_data/alice/psi-output.csv", "bob": "/app/local_data/bob/psi-output.csv"},
+      "receiver": "alice"}}'
+    job_name: psi
+    job_parties: '["party1","party2"]'
+    job_uid: psi
+  - invoke_target: module_task.sgb_v.sgb_v_predict
+    job_args: ""
+    job_dependencies: '["sgb_v_train"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "psi-output.csv", "bob": "psi-output.csv"}, "output_path": {"alice": "sgb-output.csv", "bob": "sgb-output.csv"}, "keys": {"alice": ["id1"], "bob": ["id2"]}, "saving_path_dict": {"alice": "sgb-model", "bob": "sgb-model"}, "label_holder": "bob", "psi_protocl": "KKRT_PSI_2PC"}}'
+    job_name: sgb_v_predict
+    job_parties: '["party1","party2"]'
+    job_uid: sgb_v_predict
