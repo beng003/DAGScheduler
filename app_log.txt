@@ -1,0 +1,163 @@
+INFO:     Will watch for changes in these directories: ['/disc/home/beng003/work/DAGScheduler']
+INFO:     Uvicorn running on http://0.0.0.0:9099 (Press CTRL+C to quit)
+INFO:     Started reloader process [1136372] using WatchFiles
+INFO:     Started server process [1136414]
+INFO:     Waiting for application startup.
+2025-09-13 21:29:25.370 |  | INFO     | server:lifespan:17 - RuoYi-FastAPI开始启动
+2025-09-13 21:29:25.371 |  | INFO     | config.get_db:init_create_table:23 - 初始化数据库连接...
+2025-09-13 21:29:25.374 |  | ERROR    | config.get_db:init_create_table:29 - 数据库连接失败: (asyncmy.errors.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+ERROR:    Traceback (most recent call last):
+  File "asyncmy/connection.pyx", line 567, in asyncmy.connection.Connection.connect
+  File "asyncmy/connection.pyx", line 558, in asyncmy.connection.Connection.connect
+  File "/disc/home/beng003/.local/share/uv/python/cpython-3.10.16-linux-x86_64-gnu/lib/python3.10/asyncio/tasks.py", line 445, in wait_for
+    return fut.result()
+  File "/disc/home/beng003/.local/share/uv/python/cpython-3.10.16-linux-x86_64-gnu/lib/python3.10/asyncio/streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+  File "uvloop/loop.pyx", line 2043, in create_connection
+  File "uvloop/loop.pyx", line 2020, in uvloop.loop.Loop.create_connection
+ConnectionRefusedError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 3298, in raw_connection
+    return self.pool.connect()
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/impl.py", line 179, in _do_get
+    with util.safe_reraise():
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/impl.py", line 177, in _do_get
+    return self._create_connection()
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 674, in __init__
+    self.__connect()
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/engine/create.py", line 646, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 622, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/dialects/mysql/asyncmy.py", line 286, in connect
+    await_only(creator_fn(*arg, **kw)),
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+  File "asyncmy/connection.pyx", line 1345, in _connect
+  File "asyncmy/connection.pyx", line 590, in connect
+asyncmy.errors.OperationalError: (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/starlette/routing.py", line 693, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+  File "/disc/home/beng003/.local/share/uv/python/cpython-3.10.16-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/fastapi/routing.py", line 133, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+  File "/disc/home/beng003/.local/share/uv/python/cpython-3.10.16-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/disc/home/beng003/work/DAGScheduler/server.py", line 19, in lifespan
+    await init_create_table()  # 初始化数据库表结构
+  File "/disc/home/beng003/work/DAGScheduler/config/get_db.py", line 30, in init_create_table
+    raise e
+  File "/disc/home/beng003/work/DAGScheduler/config/get_db.py", line 25, in init_create_table
+    async with async_engine.begin() as conn:
+  File "/disc/home/beng003/.local/share/uv/python/cpython-3.10.16-linux-x86_64-gnu/lib/python3.10/contextlib.py", line 199, in __aenter__
+    return await anext(self.gen)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/ext/asyncio/engine.py", line 1064, in begin
+    async with conn:
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/ext/asyncio/base.py", line 121, in __aenter__
+    return await self.start(is_ctxmanager=True)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/ext/asyncio/engine.py", line 274, in start
+    await greenlet_spawn(self.sync_engine.connect)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 3274, in connect
+    return self._connection_cls(self)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 148, in __init__
+    Connection._handle_dbapi_exception_noconnection(
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2439, in _handle_dbapi_exception_noconnection
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 146, in __init__
+    self._dbapi_connection = engine.raw_connection()
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 3298, in raw_connection
+    return self.pool.connect()
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 449, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 1263, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 712, in checkout
+    rec = pool._do_get()
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/impl.py", line 179, in _do_get
+    with util.safe_reraise():
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/impl.py", line 177, in _do_get
+    return self._create_connection()
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 390, in _create_connection
+    return _ConnectionRecord(self)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 674, in __init__
+    self.__connect()
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/pool/base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/engine/create.py", line 646, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 622, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/dialects/mysql/asyncmy.py", line 286, in connect
+    await_only(creator_fn(*arg, **kw)),
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+  File "/disc/home/beng003/work/DAGScheduler/.venv/lib/python3.10/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+  File "asyncmy/connection.pyx", line 1345, in _connect
+  File "asyncmy/connection.pyx", line 590, in connect
+sqlalchemy.exc.OperationalError: (asyncmy.errors.OperationalError) (2003, "Can't connect to MySQL server on '127.0.0.1' ([Errno 111] Connection refused)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+ERROR:    Application startup failed. Exiting.
+
+////////////////////////////////////////////////////////////////////
+//                          _ooOoo_                               //
+//                         o8888888o                              //
+//                         88" . "88                              //
+//                         (| ^_^ |)                              //
+//                         O\  =  /O                              //
+//                      ____/`---'\____                           //
+//                    .'  \|     |//  `.                         //
+//                   /  \|||  :  |||//  \                        //
+//                  /  _||||| -:- |||||-  \                       //
+//                  |   | \\  -  /// |   |                       //
+//                  | \_|  ''\---/''  |   |                       //
+//                  \  .-\__  `-`  ___/-. /                       //
+//                ___`. .'  /--.--\  `. . ___                     //
+//              ."" '<  `.___\_<|>_/___.'  >'"".                  //
+//            | | :  `- \`.;`\ _ /`;.`/ - ` : | |                 //
+//            \  \ `-.   \_ __\ /__ _/   .-` /  /                 //
+//      ========`-.____`-.___\_____/___.-`____.-'========         //
+//                           `=---='                              //
+//      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^        //
+//             佛祖保佑       永不宕机      永无BUG                 //
+////////////////////////////////////////////////////////////////////
+    
+INFO:     Stopping reloader process [1136372]

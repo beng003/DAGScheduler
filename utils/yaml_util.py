@@ -1,12 +1,7 @@
 import json
 import yaml
 
-__all__ = [
-    "json_to_yaml",
-    "read_yaml",
-    "write_yaml",
-    "convert_yaml_to_json_str"
-]
+__all__ = ["json_to_yaml", "read_yaml", "write_yaml", "convert_yaml_to_json_str"]
 
 
 def json_to_yaml(json_file_path, yaml_file_path):
@@ -35,17 +30,75 @@ def json_to_yaml(json_file_path, yaml_file_path):
     except Exception as e:
         print(f"Error: {e}")
 
+
 def convert_yaml_to_json_str(input_file, output_file):
     # 直接加载YAML文件并解析
-    with open(input_file, 'r') as yaml_file:
+    with open(input_file, "r") as yaml_file:
         data = yaml.safe_load(yaml_file)
+
+    # sf_cluster_desc_alice = {
+    #     "devices": {
+    #         "spu_config": {
+    #             "cluster_def": {
+    #                 "nodes": [
+    #                     {
+    #                         "address": "192.168.0.10:9100",
+    #                         "listen_address": "0.0.0.0:9100",
+    #                         "party": "alice",
+    #                     },
+    #                     {
+    #                         "address": "192.168.0.11:9100",
+    #                         "listen_address": "0.0.0.0:9100",
+    #                         "party": "bob",
+    #                     },
+    #                 ],
+    #                 "runtime_config": {"field": 3, "protocol": 2},
+    #             },
+    #             "link_desc": {
+    #                 "brpc_channel_connection_type": "pooled",
+    #                 "brpc_channel_protocol": "http",
+    #                 "connect_retry_interval_ms": 1000,
+    #                 "connect_retry_times": 60,
+    #                 "http_timeout_ms": 1200000,
+    #                 "recv_timeout_ms": 1200000,
+    #             },
+    #         },
+    #         "heu_config": {
+    #             "evaluators": [{"party": "alice"}],
+    #             "he_parameters": {
+    #                 "key_pair": {"generate": {"bit_size": 2048}},
+    #                 "schema": "ou",
+    #             },
+    #             "mode": "PHEU",
+    #             "sk_keeper": {"party": "bob"},
+    #         },
+    #     },
+    #     "sf_init": {
+    #         "address": "192.168.0.10:6379",
+    #         "cluster_config": {
+    #             "parties": {
+    #                 "alice": {
+    #                     "address": "192.168.0.10:9200",
+    #                     "listen_addr": "0.0.0.0:9200",
+    #                 },
+    #                 "bob": {
+    #                     "address": "192.168.0.11:9200",
+    #                     "listen_addr": "0.0.0.0:9200",
+    #                 },
+    #             },
+    #             "self_party": "alice",
+    #         },
+    #     },
+    # }
+
+    # data["sf_cluster_desc"] = sf_cluster_desc_alice
     
     # 转换为紧凑的单行JSON字符串，保持所有转义字符
     json_str = json.dumps(json.dumps(data))
-    
     # 写入文件（保持原始转义格式）
-    with open(output_file, 'w', encoding='utf-8') as json_file:
-        json_file.write(f'{json_str}')
+    with open(output_file, "w", encoding="utf-8") as json_file:
+        json_file.write(f"{json_str}")
+
 
 def read_yaml(target):
     # if isinstance(target, str) or isinstance(target, bytes):

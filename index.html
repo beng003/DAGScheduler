@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>文件内容查看</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/ansi-to-html@latest"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7f9;
+        color: #333;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* 左侧按钮面板 */
+      .btn-panel {
+        width: 250px;
+        padding: 20px;
+        border-right: 1px solid #e0e0e0;
+        background-color: #fafafa;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .nav-btn {
+        transition: all 0.3s ease;
+        text-align: left;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-weight: 500;
+      }
+
+      .nav-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* 右侧内容区域 */
+      .content {
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .content-header {
+        margin-bottom: 20px;
+      }
+
+      .content-header h1 {
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+      }
+
+      .file-content {
+        flex-grow: 1;
+        background: white;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        overflow-y: auto;
+        max-height: calc(100vh - 160px);
+        font-family: monospace, "Courier New", Courier;
+        white-space: pre-wrap;
+        word-break: break-all;
+        line-height: 1.5;
+        font-size: 16px;
+        font-weight: 20; 
+      }
+
+      /* 滚动条样式 */
+      .file-content::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .file-content::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+
+      .file-content::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+
+      .file-content::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      .status-bar {
+        margin-top: 15px;
+        font-size: 14px;
+        color: #7f8c8d;
+        display: flex;
+        /* justify-content: space-between; */
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .last-updated {
+        font-style: italic;
+      }
+
+      .highlight {
+        background-color: #fff8e1;
+        transition: background-color 0.5s ease;
+      }
+
+      .config-json,
+      .mt-4,
+      .file-info {
+        display: none;
+      }
+
+      /* 响应式设计 */
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+        .btn-panel {
+          width: 100%;
+          border-right: none;
+          border-bottom: 1px solid #e0e0e0;
+        }
+        .content {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- 左侧按钮面板 -->
+      <div class="btn-panel">
+        <h4>导航按钮</h4>
+        <div class="btn-group">
+          <button class="btn btn-primary nav-btn" data-url="https://github.com">
+            <i class="bi bi-github"></i> GitHub
+          </button>
+          <button
+            class="btn btn-success nav-btn"
+            data-url="https://stackoverflow.com"
+          >
+            <i class="bi bi-stack-overflow"></i> Stack Overflow
+          </button>
+          <button
+            class="btn btn-info nav-btn"
+            data-url="https://developer.mozilla.org"
+          >
+            <i class="bi bi-code-slash"></i> MDN Web Docs
+          </button>
+          <button
+            class="btn btn-warning nav-btn"
+            data-url="https://css-tricks.com"
+          >
+            <i class="bi bi-palette"></i> CSS-Tricks
+          </button>
+        </div>
+
+        <div class="status-bar">
+          <span class="auto-scroll">
+            <input type="checkbox" id="autoScroll" checked />
+            <label for="autoScroll">自动滚动到底部</label>
+          </span>
+          <span class="last-updated" id="lastUpdated"></span>
+        </div>
+      </div>
+
+      <!-- 右侧内容区域 -->
+      <div class="content">
+        <div class="content-header">
+          <h1>文件内容查看</h1>
+        </div>
+
+        <div class="file-content" id="fileContent">
+          <p style="color: #7f8c8d; text-align: center; padding: 40px">
+            加载中...
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 配置文件内容 (隐藏) -->
+    <div class="config-json">
+      { "buttonTargets": [ {"name": "GitHub", "url": "https://github.com"},
+      {"name": "Stack Overflow", "url": "https://stackoverflow.com"}, {"name":
+      "MDN Web Docs", "url": "https://developer.mozilla.org"}, {"name":
+      "CSS-Tricks", "url": "https://css-tricks.com"} ], "defaultFileUrl":
+      "logs/log_all.log", "refreshInterval": 2000 }
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/ansi_up@5.0.0/ansi_up.min.js"></script>
+    <script>
+      // 配置文件
+      const config = {
+        fileBaseUrl: "logs/",
+        pollInterval: 2000,
+        currentFile: "log_all.log",
+        lastContent: "",
+        pollTimer: null,
+        // 新增：是否用户正在滚动的标志
+        isUserScrolling: false,
+        // 新增：防抖计时器
+        scrollSaveTimer: null,
+      };
+
+      // 初始化函数
+      $(document).ready(function () {
+        // 初始化自动滚动复选框事件
+        $("#autoScroll").change(function () {
+          if (this.checked && config.currentFile) {
+            scrollToBottom();
+          }
+        });
+
+        // 按钮点击事件 - 打开URL
+        $(".nav-btn").click(function () {
+          const url = $(this).data("url");
+          window.open(url, "_blank");
+        });
+
+        // --- 新增：监听内容区域的滚动事件，并防抖 ---
+        $("#fileContent").on("scroll", function () {
+          // 如果开启了自动滚动，则不保存位置
+          if ($("#autoScroll").is(":checked")) return;
+
+          clearTimeout(config.scrollSaveTimer);
+          config.scrollSaveTimer = setTimeout(function () {
+            // 保存滚动位置
+            sessionStorage.setItem(
+              "fileContentScrollPosition",
+              $("#fileContent").scrollTop()
+            );
+          }, 150); // 150毫秒的防抖间隔
+        });
+
+        // 页面加载时，尝试从sessionStorage读取并恢复滚动位置
+        const savedPosition = sessionStorage.getItem(
+          "fileContentScrollPosition"
+        );
+        if (savedPosition !== null) {
+          // 稍作延迟以确保DOM已渲染
+          setTimeout(function () {
+            $("#fileContent").scrollTop(parseInt(savedPosition, 10));
+          }, 100);
+        }
+
+        // 页面加载时自动加载默认文件
+        loadDefaultFile();
+      });
+
+      // 加载默认文件函数
+      function loadDefaultFile() {
+        // 清除之前的轮询
+        if (config.pollTimer) {
+          clearTimeout(config.pollTimer);
+          config.pollTimer = null;
+        }
+
+        $("#fileContent").html(
+          '<p style="text-align: center; padding: 20px;">加载中...</p>'
+        );
+
+        // 开始加载文件内容
+        fetchFileContent();
+      }
+
+      // 获取文件内容
+      // 获取文件内容
+      function fetchFileContent() {
+        if (!config.currentFile) return;
+
+        const url = config.fileBaseUrl + config.currentFile;
+
+        $.ajax({
+          url: url,
+          type: "GET",
+          dataType: "text",
+          success: function (data) {
+            if (data !== config.lastContent) {
+              config.lastContent = data;
+
+              const shouldAutoScroll = $("#autoScroll").is(":checked");
+
+              // --- 主要修改：只在需要时保存和恢复 ---
+              let previousScrollTop = null;
+              if (!shouldAutoScroll) {
+                // 1. 在更新内容前，保存当前的滚动位置
+                previousScrollTop = $("#fileContent").scrollTop();
+                // 同时也从storage读取一次，确保是最新的用户操作
+                const savedPos = sessionStorage.getItem(
+                  "fileContentScrollPosition"
+                );
+                if (savedPos !== null) {
+                  previousScrollTop = Math.max(
+                    previousScrollTop,
+                    parseInt(savedPos, 10)
+                  );
+                }
+              }
+
+              // 更新内容
+              displayContent(data);
+
+              if (shouldAutoScroll) {
+                setTimeout(scrollToBottom, 50);
+              } else if (previousScrollTop !== null) {
+                // 2. 内容更新后，恢复滚动位置
+                // 使用requestAnimationFrame确保在浏览器重绘前执行
+                requestAnimationFrame(function () {
+                  $("#fileContent").scrollTop(previousScrollTop);
+                });
+              }
+            }
+
+            $("#lastUpdated").text(
+              "最后更新: " + new Date().toLocaleTimeString()
+            );
+
+            config.pollTimer = setTimeout(
+              fetchFileContent,
+              config.pollInterval
+            );
+          },
+          error: function (xhr, status, error) {
+            $("#fileContent").html(`
+                        <p style="color: #e74c3c; text-align: center; padding: 20px;">
+                            加载文件失败: ${error || "未知错误"}
+                        </p>
+                    `);
+
+            // 设置下一次轮询（即使出错也继续尝试）
+            config.pollTimer = setTimeout(
+              fetchFileContent,
+              config.pollInterval
+            );
+          },
+        });
+      }
+
+      // 显示文件内容
+      function displayContent(content) {
+        const $content = $("#fileContent");
+        // 更新内容
+        if (content.trim() === "") {
+          $content.html(
+            '<p style="color: #7f8c8d; text-align: center; padding: 40px;">文件为空</p>'
+          );
+        } else {
+          // $content.text(content);
+          // 修复：使用converter将ANSI颜色代码转换为HTML
+          // 创建 ansi_up 实例
+          const ansiConverter = new AnsiUp();
+          // 将 ANSI 文本转换为 HTML
+          const coloredHtml = ansiConverter.ansi_to_html(content);
+          $content.html(coloredHtml);
+
+          // 添加内容更新高亮效果
+          $content.addClass("highlight");
+          setTimeout(() => {
+            $content.removeClass("highlight");
+          }, 1000);
+        }
+
+        // 如果自动滚动已勾选，则滚动到底部
+        if ($("#autoScroll").is(":checked")) {
+          // 给一点延迟确保DOM已更新
+          setTimeout(scrollToBottom, 50);
+        }
+      }
+
+      // 滚动到底部
+      function scrollToBottom() {
+        const $content = $("#fileContent");
+        $content.scrollTop($content[0].scrollHeight);
+      }
+    </script>
+  </body>
+</html>

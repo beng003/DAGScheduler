@@ -8,3 +8,5 @@ logs
 todo.md
 ./docker/nginx/data
 caddyfile.txt
+*.js
+node_modules

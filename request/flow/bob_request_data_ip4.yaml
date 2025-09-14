@@ -1,0 +1,106 @@
+concurrent: "1"
+cron_expression: 0/10 * * * * ?
+misfire_policy: "3"
+priority: "0"
+remark: test
+status: "1"
+task_group: default
+task_initiator: alice
+task_name: task_flow
+task_yaml:
+  - invoke_target: module_task.preprocess.psi_csv
+    job_args: ""
+    job_dependencies: "[]"
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "alice_bank_flow.csv", "bob": "bob_bank_flow.csv"}, "key": {"alice": ["uid1"], "bob": ["uid2"]}, "output_path": {"alice": "psi-output.csv", "bob": "psi-output.csv"}, "receiver": "alice"}}'
+    job_name: psi_csv
+    job_parties: '["party1","party2"]'
+    job_uid: psi_csv
+  - invoke_target: module_task.preprocess.replace_data
+    job_args: ""
+    job_dependencies: '["psi_csv"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "psi-output.csv", "bob": "psi-output.csv"}, "replace_dict": {"education": {"tertiary": 3, "secondary": 2, "primary": 1, "unknown": "np.NaN"}, "default": {"no": 0, "yes": 1, "unknown": "np.NaN"}, "housing": {"no": 0, "yes": 1, "unknown": "np.NaN"}, "loan": {"no": 0, "yes": 1, "unknown": "np.NaN"}, "month": {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12}, "y": {"no": 0, "yes": 1}}, "replace_out": {"alice": "replace_data_out.csv", "bob": "replace_data_out.csv"}}}'
+    job_name: replace_data
+    job_parties: '["party1","party2"]'
+    job_uid: replace_data
+  - invoke_target: module_task.preprocess.fillna_data
+    job_args: ""
+    job_dependencies: '["replace_data"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "replace_data_out.csv", "bob": "replace_data_out.csv"}, "fillna_dict": {"education": "mode", "default": "mode", "housing": "mode", "loan": "mode"}, "fillna_out": {"alice": "fillna_output.csv", "bob": "fillna_output.csv"}}}'
+    job_name: fillna_data
+    job_parties: '["party1","party2"]'
+    job_uid: fillna_data
+  - invoke_target: module_task.preprocess.woe_binning
+    job_args: ""
+    job_dependencies: '["fillna_data"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "fillna_output.csv", "bob": "fillna_output.csv"}, "binning_method": "chimerge", "bin_num": 4, "bin_names": {"alice": ["balance"], "bob": ["duration"]}, "label_name": "y", "woe_binning_out": {"alice": "woe_binning_out.csv", "bob": "woe_binning_out.csv"}}}'
+    job_name: woe_binning
+    job_parties: '["party1","party2"]'
+    job_uid: woe_binning
+  - invoke_target: module_task.preprocess.one_hot_encoder
+    job_args: ""
+    job_dependencies: '["woe_binning"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "woe_binning_out.csv", "bob": "woe_binning_out.csv"}, "column_list": ["job", "marital", "contact", "month", "day", "poutcome"], "one_hot_encoder_out": {"alice": "one_hot_encoder_out.csv", "bob": "one_hot_encoder_out.csv"}}}'
+    job_name: one_hot_encoder
+    job_parties: '["party1","party2"]'
+    job_uid: one_hot_encoder
+  - invoke_target: module_task.preprocess.standard_scaler
+    job_args: ""
+    job_dependencies: '["one_hot_encoder"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "one_hot_encoder_out.csv", "bob": "one_hot_encoder_out.csv"}, "standard_scaler_out": {"alice": "standard_scaler_out.csv", "bob": "standard_scaler_out.csv"}, "no_x_columns": ["uid1", "uid2", "y"]}}'
+    job_name: standard_scaler
+    job_parties: '["party1","party2"]'
+    job_uid: standard_scaler
+  - invoke_target: module_task.preprocess.split
+    job_args: ""
+    job_dependencies: '["standard_scaler"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"data_type": "vdf", "input_path": {"alice": "standard_scaler_out.csv", "bob": "standard_scaler_out.csv"}, "random_state": 1234, "shuffle": true, "test_output_path": {"alice": "test_dataset.csv", "bob": "test_dataset.csv"}, "test_size": 0.7, "train_output_path": {"alice": "train_dataset.csv", "bob": "train_dataset.csv"}, "train_size": 0.3}}'
+    job_name: split
+    job_parties: '["party1","party2"]'
+    job_uid: split
+  - invoke_target: module_task.sgb_v.sgb_v_train
+    job_args: ""
+    job_dependencies: '["split"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "train_dataset.csv", "bob": "train_dataset.csv"}, "keys": {"alice": ["id1"], "bob": ["id2"]}, "saving_path_dict": {"alice": "sgb-model", "bob": "sgb-model"}, "psi_protocl": "KKRT_PSI_2PC"}}'
+    job_name: sgb_v_train
+    job_parties: '["party1","party2"]'
+    job_uid: sgb_v_train
+  - invoke_target: module_task.sgb_v.sgb_v_predict
+    job_args: ""
+    job_dependencies: '["split", "sgb_v_train"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "test_dataset.csv", "bob": "test_dataset.csv"}, "output_path": {"alice": "sgbv_predict_output.csv", "bob": "sgbv_predict_output.csv"}, "keys": {"alice": ["uid1"], "bob": ["uid2"]}, "saving_path_dict": {"alice": "sgb-model", "bob": "sgb-model"}, "label_holder": "bob", "psi_protocl": "KKRT_PSI_2PC"}}'
+    job_name: sgb_v_predict
+    job_parties: '["party1","party2"]'
+    job_uid: sgb_v_predict
+  - invoke_target: module_task.stats.table_statistics_data
+    job_args: ""
+    job_dependencies: '["standard_scaler"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "standard_scaler_out.csv", "bob": "standard_scaler_out.csv"}, "table_statistics_out": {"alice": "table_statistics_out.csv", "bob": "table_statistics_out.csv"}}}'
+    job_name: table_statistics_data
+    job_parties: '["party1","party2"]'
+    job_uid: table_statistics_data
+  - invoke_target: module_task.stats.pearson_r
+    job_args: ""
+    job_dependencies: '["standard_scaler"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.10:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "alice"}}}, "sf_node_eval_param": {"input_path": {"alice": "standard_scaler_out.csv", "bob": "standard_scaler_out.csv"}, "x_col": ["age", "education", "default", "balance", "housing", "duration", "campaign", "pdays", "previous"], "pearson_r_out": {"alice": "pearson_r_out.csv", "bob": "pearson_r_out.csv"}}}'
+    job_name: pearson_r
+    job_parties: '["party1","party2"]'
+    job_uid: pearson_r
+  - invoke_target: module_task.stats.ss_vif_v_data
+    job_args: ""
+    job_dependencies: '["standard_scaler"]'
+    job_executor: default
+    job_kwargs: '{"sf_cluster_desc": {"devices": {"spu_config": {"cluster_def": {"nodes": [{"address": "192.168.0.10:9100", "listen_address": "0.0.0.0:9100", "party": "alice"}, {"address": "192.168.0.11:9100", "listen_address": "0.0.0.0:9100", "party": "bob"}], "runtime_config": {"field": 3, "protocol": 2}}, "link_desc": {"brpc_channel_connection_type": "pooled", "brpc_channel_protocol": "http", "connect_retry_interval_ms": 1000, "connect_retry_times": 60, "http_timeout_ms": 1200000, "recv_timeout_ms": 1200000}}, "heu_config": {"evaluators": [{"party": "alice"}], "he_parameters": {"key_pair": {"generate": {"bit_size": 2048}}, "schema": "ou"}, "mode": "PHEU", "sk_keeper": {"party": "bob"}}}, "sf_init": {"address": "192.168.0.11:6379", "cluster_config": {"parties": {"alice": {"address": "192.168.0.10:9200", "listen_addr": "0.0.0.0:9200"}, "bob": {"address": "192.168.0.11:9200", "listen_addr": "0.0.0.0:9200"}}, "self_party": "bob"}}}, "sf_node_eval_param": {"input_path": {"alice": "standard_scaler_out.csv", "bob": "standard_scaler_out.csv"}, "x_col": ["age", "education", "default", "balance", "housing", "duration", "campaign", "pdays", "previous"], "vif_out": {"alice": "vif_out.csv", "bob": "vif_out.csv"}}}'
+    job_name: ss_vif_v_data
+    job_parties: '["party1","party2"]'
+    job_uid: ss_vif_v_data
