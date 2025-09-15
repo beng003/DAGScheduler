@@ -14,4 +14,5 @@ if __name__ == '__main__':
         reload=AppConfig.app_reload,  # 开发模式热重载（代码修改自动重启）
         # reload=False,
         # timeout_keep_alive=6000,
+        log_config=None
     )

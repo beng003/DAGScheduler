@@ -12,11 +12,23 @@ services:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
 
+  alice_dag_scheduler_frontend:
+    image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-frontend:latest # 这里指定构建的镜像名称
+    container_name: alice_dag_scheduler_frontend
+    ports:
+      - "8082:8081"
+    networks:
+      - network_beng003
+    environment:
+      - FILE_BASE_URL=alice_dag_scheduler.h100.secretflow.icu:8000
+    depends_on:
+      - alice_dag_scheduler
+
   alice_dag_scheduler:
     image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:latest # 这里指定构建的镜像名称
     container_name: alice_dag_scheduler
     # ports:
-    #   - "8088:9099"
+    #   - "9100:9099"
     networks:
       - network_beng003
     environment:
@@ -77,11 +89,23 @@ services:
       timeout: 3s
       retries: 5
 
+  bob_dag_scheduler_frontend:
+    image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-frontend:latest # 这里指定构建的镜像名称
+    container_name: bob_dag_scheduler_frontend
+    ports:
+      - "8083:8081"
+    networks:
+      - network_beng003
+    environment:
+      - FILE_BASE_URL=bob_dag_scheduler.h100.secretflow.icu:8000
+    depends_on:
+      - bob_dag_scheduler
+
   bob_dag_scheduler:
     image: crpi-84gohwg2zpoyckdg.cn-hangzhou.personal.cr.aliyuncs.com/beng003_docker/dagscheduler-backend:latest # 这里指定构建的镜像名称
     container_name: bob_dag_scheduler
     # ports:
-    #   - "8088:9099"
+    #   - "9200:9099"
     networks:
       - network_beng003
     environment:

@@ -33,7 +33,7 @@ class LoggerInitializer:
             os.mkdir(self.log_path)
 
     @staticmethod
-    def __filter(log: Dict):
+    def _filter(log: Dict):
         """
         自定义日志过滤器，添加trace_id
         """
@@ -54,23 +54,14 @@ class LoggerInitializer:
         # 3. format_str -> 彩色日志格式：时间 | trace_id | 日志级别 | 代码位置 | 消息
         # 4. enqueue    -> 解决多线程日志乱序问题（生产环境必须开启）
 
-        ws_handler = WebSocketLogHandler(manager)
-        _logger.add(
-            ws_handler.write,
-            filter=self.__filter,
-            format=self.format_str,
-            level="INFO",
-            colorize=True,  # 保持 ANSI 颜色代码
-        )
-
         # 输出到控制台
         _logger.add(
-            sys.stderr, filter=self.__filter, format=self.format_str, enqueue=True
+            sys.stderr, filter=self._filter, format=self.format_str, enqueue=True
         )
         # 输出到文件
         _logger.add(
             self.log_path_error,
-            filter=self.__filter,
+            filter=self._filter,
             format=self.format_str,
             rotation="50MB",  # 日志文件达到50MB自动分割
             encoding="utf-8",  # 确保中文日志正常存储
@@ -81,7 +72,7 @@ class LoggerInitializer:
         _logger.add(
             self.log_path_all,
             level="DEBUG",  # 设置为DEBUG级别，捕获所有日志信息[3](@ref)
-            filter=self.__filter,
+            filter=self._filter,
             format=self.format_str,
             rotation="50MB",  # 日志文件达到50MB自动分割
             retention="7 days",  # 可选：设置日志保留期限，例如只保留最近7天的日志[5](@ref)
@@ -91,10 +82,21 @@ class LoggerInitializer:
             colorize=True,  # 新增：确保颜色代码写入文件
         )
 
-    def get_logger(self):
         return _logger
 
 
+def web_socket_log_init():
+    # 添加WebSocket日志处理器，只发送INFO级别及以上的日志到前端
+    # web_socket_handler = WebSocketLogHandler(manager)
+    # _logger.add(
+    #     web_socket_handler.write,  # 使用write方法作为日志处理器
+    #     level="INFO",  # 只发送INFO级别及以上的日志
+    #     filter=LoggerInitializer._filter,
+    #     # format=log_initializer.format_str,
+    #     enqueue=True,  # 启用异步写入，避免阻塞
+    # )
+    pass
+    
 # 初始化日志处理器
 log_initializer = LoggerInitializer()
-logger = log_initializer.get_logger()
+logger = log_initializer.init_log()

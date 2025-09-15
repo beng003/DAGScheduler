@@ -49,7 +49,7 @@ def add_and_exec(party:str):
     terminal_width = os.get_terminal_size().columns
     print("="*terminal_width)
     # YAML文件路径
-    yaml_file = f"./request/{party}_request_data_ip4.yaml"
+    yaml_file = f"./request/psi/{party}_request_data_ip4.yaml"
     
     if party == "alice_local":
         party = "alice"

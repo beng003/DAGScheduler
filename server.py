@@ -1,36 +1,53 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, WebSocketDisconnect
+# from fastapi.responses import Response
 from config.env import AppConfig
 from config.get_db import init_create_table
 from config.get_redis import RedisUtil
-from utils.common_util import worship
-from utils.log_util import logger
+# from utils.common_util import worship
 from module_admin.controller.task_controller import taskController
+from module_admin.controller.log_controller import logController
 from middlewares.trace_middleware import add_trace_middleware
 from exceptions.handle import handle_exception
+import os
+from fastapi.middleware.cors import CORSMiddleware
+from utils.log_util import logger, log_initializer
+from utils.web_socket import manager
 
 # 生命周期事件
 # note: contextlib生命周期管理（启动前准备 → 运行 → 关闭清理）
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    log_initializer.init_log()
     # 启动阶段
-    logger.info(f'{AppConfig.app_name}开始启动')
-    worship()  # 打印启动艺术字
+    logger.info(f"{AppConfig.app_name}开始启动")
+    # worship()  # 打印启动艺术字
     await init_create_table()  # 初始化数据库表结构
     app.state.redis = await RedisUtil.create_redis_pool()  # 创建Redis连接池
-    logger.info(f'{AppConfig.app_name}启动成功')
+    logger.info(f"{AppConfig.app_name}启动成功")
     # 运行阶段
     yield
     # 关闭阶段
+    await manager.close_all_connections()
     await RedisUtil.close_redis_pool(app)  # 关闭Redis连接池
     # await job_scheduler.close()
-    
+
+
 # FastAPI核心对象初始化
 app = FastAPI(
     title=AppConfig.app_name,  # 从配置读取应用名称
-    description=f'{AppConfig.app_name}接口文档',  # 自动生成API文档描述
+    description=f"{AppConfig.app_name}接口文档",  # 自动生成API文档描述
     version=AppConfig.app_version,  # 从配置读取版本号
     lifespan=lifespan,  # 挂载生命周期处理器
+)
+
+# 添加CORS中间件 - 添加这段代码
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 允许所有源，生产环境中应该限制特定域名
+    allow_credentials=True,
+    allow_methods=["*"],  # 允许所有HTTP方法
+    allow_headers=["*"],  # 允许所有HTTP头
 )
 
 add_trace_middleware(app)  # 添加请求追踪中间件
@@ -38,8 +55,9 @@ handle_exception(app)  # 添加全局异常处理器
 
 # 加载路由列表
 controller_list = [
-    {'router': taskController, 'tags': ['系统监控-定时任务']},
+    {"router": taskController, "tags": ["系统监控-定时任务"]},
+    {"router": logController, "tags": ["系统监控-日志"]},
 ]
 
 for controller in controller_list:
-    app.include_router(router=controller.get('router'), tags=controller.get('tags'))
+    app.include_router(router=controller.get("router"), tags=controller.get("tags"))

@@ -41,3 +41,4 @@ xcrun==0.4
 
 opentelemetry-distro==0.53b1
 opentelemetry-instrumentation-fastapi
+weakref

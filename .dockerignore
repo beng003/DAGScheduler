@@ -26,6 +26,7 @@ htmlcov/
 .venv/
 .vscode/
 .idea/
+node_modules/
 
 # 项目特定文件
 requirements.txt

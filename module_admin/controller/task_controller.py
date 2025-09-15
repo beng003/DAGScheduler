@@ -72,7 +72,7 @@ async def add_task(
     add_task_result = await TaskService.add_task_services(
         query_db, request.app.state.redis, add_task
     )
-    logger.info(add_task_result.message)
+    logger.info(add_task_result.message+"，task_uid："+add_task_result.result['task_uid'])
 
     return ResponseUtil.success(
         msg=add_task_result.message, dict_content=add_task_result.result
